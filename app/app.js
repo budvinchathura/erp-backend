@@ -7,6 +7,14 @@ var app = express();
 
 // app.use('/',()=>{});
 app.use(cors());
+
+app.use((req, res, next) => {
+   
+    res.header("Access-Control-Expose-Headers", "erp-auth-token");
+    
+    next();
+});
+
 app.use(express.json());
 
 app.use('/user',user_route);
