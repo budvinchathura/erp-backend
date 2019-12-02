@@ -1,10 +1,12 @@
 var express = require('express');
 const error_route = require('./error/routes')
 const user_route = require('./user/routes');
+var cors = require('cors')
 
 var app = express();
 
 // app.use('/',()=>{});
+app.use(cors());
 app.use(express.json());
 
 app.use('/user',user_route);
