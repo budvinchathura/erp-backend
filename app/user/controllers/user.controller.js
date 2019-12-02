@@ -1,6 +1,7 @@
 var _user_model = require('../../models/models/user_model');
 const { login_validation, register_validation } = require('../validation');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 
 
@@ -16,10 +17,10 @@ module.exports.login = (req, res) => {
 
     var user_model = new _user_model();
     user_model.find_by_username(req.body.username)
-        .then((user) => {
+        .then(async (user) => {
             if (user) {
-                const passwordMatch = (req.body.password === user.password);
-                if (passwordMatch) {
+                const password_match = await bcrypt.compare(req.body.password,user.password);
+                if (password_match) {
                     // return res.status(200).send({ username: user.username });
                     const token = jwt.sign({username:user.username},process.env.TOKEN_SECRET);
                     return res.status(200).header('erp-auth-token',token).send(token);
@@ -43,10 +44,13 @@ module.exports.register = (req, res) => {
 
     var user_model = new _user_model();
     user_model.find_by_username_or_employee_id(req.body.username, req.body.employee_id)
-        .then((result) => {
+        .then(async (result) => {
             if (result) {
                 return res.status(400).send('duplicate entry');
             } else {
+                const salt = await bcrypt.genSalt(10);
+                const hashed_password = await bcrypt.hash(req.body.password, salt);
+                req.body.password = hashed_password;
                 var user_model = new _user_model(req.body);
 
                 user_model.insert()
@@ -57,11 +61,9 @@ module.exports.register = (req, res) => {
                 })
             }
         })
-        .then(()=>{
-            
-        })
+        
         .catch((error) => {
-            return res.status(500).send('server error');
+            return res.status(500).send(error);
         })
 
     // .catch((error)=>{
