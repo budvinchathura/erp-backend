@@ -22,7 +22,7 @@ module.exports.login = (req, res) => {
                 if (passwordMatch) {
                     // return res.status(200).send({ username: user.username });
                     const token = jwt.sign({username:user.username},process.env.TOKEN_SECRET);
-                    return res.header('erp-auth-token',token).send();
+                    return res.status(200).header('erp-auth-token',token).send(token);
                 } else {
                     return res.status(400).send('invalid password');
                 }
@@ -42,7 +42,7 @@ module.exports.register = (req, res) => {
     }
 
     var user_model = new _user_model();
-    user_model.find_by_username_or_emp_id(req.body.username, req.body.emp_id)
+    user_model.find_by_username_or_employee_id(req.body.username, req.body.employee_id)
         .then((result) => {
             if (result) {
                 return res.status(400).send('duplicate entry');

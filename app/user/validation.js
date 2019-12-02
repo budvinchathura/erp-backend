@@ -16,7 +16,7 @@ const register_validation = (data)=>{
     const schema = joi.object({
         username:  joi.string().min(3).required(),
         password:   joi.string().min(3).required(),
-        emp_id: joi.string().required()
+        employee_id: joi.string().required()
     })
 
     return schema.validate(data);

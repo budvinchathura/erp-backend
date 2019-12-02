@@ -2,7 +2,7 @@ const model = require('../model')
 const mysql = require('mysql');
 
 
-const attrs = ['username','password','emp_id']
+const attrs = ['username','password','employee_id']
 
 function user_model(data={}){
     model.call(this,'user',user_model,data,attrs)
@@ -23,10 +23,10 @@ user_model.prototype.find_by_username = function (username){
     return this.find_first(params);
 }
 
-user_model.prototype.find_by_username_or_emp_id = function(username,emp_id){
+user_model.prototype.find_by_username_or_employee_id = function(username,employee_id){
     var params = [];
     var param = mysql.escapeId('username').concat(' = ').concat(mysql.escape(username));
-    param = param.concat(' OR ',mysql.escapeId('emp_id'),' = ',mysql.escape(emp_id));
+    param = param.concat(' OR ',mysql.escapeId('employee_id'),' = ',mysql.escape(employee_id));
     params.push(param)
     return this.find_first(params);
 }
