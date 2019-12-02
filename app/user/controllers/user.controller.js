@@ -1,4 +1,5 @@
 var _user_model = require('../../models/models/user_model');
+var _user_access_model = require('../../models/models/user_access_model');
 const { login_validation, register_validation } = require('../validation');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
@@ -15,15 +16,15 @@ module.exports.login = (req, res) => {
     }
 
 
-    var user_model = new _user_model();
-    user_model.find_by_username(req.body.username)
+    var user_access_model = new _user_access_model();
+    user_access_model.find_by_username(req.body.username)
         .then(async (user) => {
             if (user) {
                 const password_match = await bcrypt.compare(req.body.password,user.password);
                 if (password_match) {
                     // return res.status(200).send({ username: user.username });
                     const token = jwt.sign({username:user.username},process.env.TOKEN_SECRET);
-                    return res.status(200).header('erp-auth-token',token).json();
+                    return res.status(200).header('erp-auth-token',token).json({access_level:user.access_level});
                 } else {
                     return res.status(400).json({error:'invalid password'});
                 }

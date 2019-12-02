@@ -1,11 +1,9 @@
---mysql -h sql12.freesqldatabase.com -P 3306 -D sql12313982 -u sql12313982 -p
-
 -- phpMyAdmin SQL Dump
 -- version 4.8.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 02, 2019 at 08:38 AM
+-- Generation Time: Dec 02, 2019 at 05:12 PM
 -- Server version: 10.1.34-MariaDB
 -- PHP Version: 7.2.7
 
@@ -76,6 +74,13 @@ CREATE TABLE `emergency_contact` (
   `employee_id` varchar(15) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `emergency_contact`
+--
+
+INSERT INTO `emergency_contact` (`NIC`, `name`, `contact_no`, `employee_id`) VALUES
+('655478902V', 'Guardian', '0718899354', '1');
+
 -- --------------------------------------------------------
 
 --
@@ -125,7 +130,20 @@ CREATE TABLE `employee_contact_no` (
 --
 
 INSERT INTO `employee_contact_no` (`employee_id`, `contact_no`) VALUES
-('1', '0719715561');
+('1', '0719715561'),
+('1', '07789857865');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `employee_custom_attributes`
+--
+
+CREATE TABLE `employee_custom_attributes` (
+  `employee_id` varchar(15) NOT NULL,
+  `attribute` varchar(20) NOT NULL,
+  `value` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -178,7 +196,7 @@ CREATE TABLE `job_title` (
 --
 
 INSERT INTO `job_title` (`job_title`, `access_level`) VALUES
-('QA Engineer', '1');
+('QA Engineer', 'L1');
 
 -- --------------------------------------------------------
 
@@ -287,7 +305,30 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`employee_id`, `username`, `password`) VALUES
-('1', 'username', 'password');
+('1', 'username', '$2a$10$OtqrZQIHlb522oEZNQiVqeIF9rcNlh8gX.ejTEacgUJsDulgMe/m.'),
+('2', 'username2', '$2a$10$EqsUYpbalwRHobNqorAphuXLy/JAxO8AApOyqeDAn5kDZL.ObX5h2');
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `user_access`
+-- (See below for the actual view)
+--
+CREATE TABLE `user_access` (
+`employee_id` varchar(15)
+,`username` varchar(20)
+,`password` varchar(100)
+,`access_level` varchar(20)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `user_access`
+--
+DROP TABLE IF EXISTS `user_access`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `user_access`  AS  select `user`.`employee_id` AS `employee_id`,`user`.`username` AS `username`,`user`.`password` AS `password`,`job_title`.`access_level` AS `access_level` from ((`user` left join `employee` on((`user`.`employee_id` = `employee`.`employee_id`))) left join `job_title` on((`employee`.`job_title` = `job_title`.`job_title`))) ;
 
 --
 -- Indexes for dumped tables
@@ -329,6 +370,12 @@ ALTER TABLE `employee`
 --
 ALTER TABLE `employee_contact_no`
   ADD PRIMARY KEY (`employee_id`,`contact_no`);
+
+--
+-- Indexes for table `employee_custom_attributes`
+--
+ALTER TABLE `employee_custom_attributes`
+  ADD PRIMARY KEY (`employee_id`,`attribute`);
 
 --
 -- Indexes for table `employee_email`
