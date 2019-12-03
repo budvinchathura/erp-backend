@@ -11,7 +11,7 @@ function model(table,sub_model,data={},attrs){
 
 }
 
-model.prototype.find_first = function findFirst(params){
+model.prototype.find_first = function find_first(params){
     const _params = {
         conditions :params
     }
@@ -38,7 +38,35 @@ model.prototype.find_first = function findFirst(params){
         
         db.find([table],_params,cb)
     });
+}
 
+model.prototype.find_all = function find_all(params){
+    const _params = {
+        conditions : params
+    }
+
+    const table = this.table;
+    const constructor = this.constructor;
+
+    return new Promise((resolve, reject) => {
+        const cb = function(error, results, fields){
+            if (error){
+                reject(error);
+            }
+            else{
+                if(results.length > 0){
+                    var res_array = [];
+                    results.forEach(function(result, index){
+                        res_array.push(new constructor(result));
+                    })
+                    resolve(res_array);
+                } else {
+                    resolve(false);
+                }
+            }
+        }
+        db.find([table], params, cb);
+    });
 }
 
 
