@@ -21,7 +21,7 @@ app.use((req, res, next) => {
 app.use(express.json());
 
 app.use('/user',user_route);
-app.use('/organization_info', organization_info_route);
+app.use('/organization-info', organization_info_route);
 
 app.use('/employee',employee_route);
 app.use(error_route);
