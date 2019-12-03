@@ -6,7 +6,6 @@ const bcrypt = require('bcryptjs');
 
 
 
-
 module.exports.login = (req, res) => {
 
     const { error } = login_validation(req.body);
@@ -23,7 +22,12 @@ module.exports.login = (req, res) => {
                 const password_match = await bcrypt.compare(req.body.password,user.password);
                 if (password_match) {
                     // return res.status(200).send({ username: user.username });
-                    const token = jwt.sign({username:user.username},process.env.TOKEN_SECRET);
+                    delete user.table;
+                    delete user.constructor;
+                    delete user.password;
+                    delete user.attrs;
+                    user = Object.assign({},user);
+                    const token = jwt.sign(user,process.env.TOKEN_SECRET);
                     return res.status(200).header('erp-auth-token',token).json({access_level:user.access_level});
                 } else {
                     return res.status(400).json({error:'invalid password'});
