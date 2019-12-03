@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 02, 2019 at 05:12 PM
+-- Generation Time: Dec 03, 2019 at 02:20 PM
 -- Server version: 10.1.34-MariaDB
 -- PHP Version: 7.2.7
 
@@ -29,17 +29,16 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `department` (
-  `dept_id` varchar(15) NOT NULL,
-  `name` varchar(20) DEFAULT NULL
+  `dept_name` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `department`
 --
 
-INSERT INTO `department` (`dept_id`, `name`) VALUES
-('1', 'Finance'),
-('2', 'HR');
+INSERT INTO `department` (`dept_name`) VALUES
+('Finance'),
+('HR');
 
 -- --------------------------------------------------------
 
@@ -101,7 +100,7 @@ CREATE TABLE `employee` (
   `employment_status` varchar(20) DEFAULT NULL,
   `active_status` tinyint(1) DEFAULT NULL,
   `job_title` varchar(20) DEFAULT NULL,
-  `dept_id` varchar(15) DEFAULT NULL,
+  `dept_name` varchar(20) DEFAULT NULL,
   `pay_grade` varchar(20) DEFAULT NULL,
   `supervisor_id` varchar(15) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -110,9 +109,9 @@ CREATE TABLE `employee` (
 -- Dumping data for table `employee`
 --
 
-INSERT INTO `employee` (`employee_id`, `first_name`, `last_name`, `NIC`, `addr_house_no`, `addr_line_1`, `addr_line_2`, `addr_city`, `dob`, `marital_status`, `employment_status`, `active_status`, `job_title`, `dept_id`, `pay_grade`, `supervisor_id`) VALUES
-('1', 'Bu', 'Cha', '972247878V', '555', 'Molpe Rd', 'Katubedda', 'Moratuwa', '1997-02-07', 'unmarried', 'permanent', 1, 'QA Engineer', '1', 'grade 1', '1'),
-('2', 'An', 'Jala', '978883365V', '67', 'Temple Rd', 'Dehiwala', NULL, '1997-12-03', 'unmarried', 'permanent', 1, 'QA Engineer', '2', 'grade 2', '1');
+INSERT INTO `employee` (`employee_id`, `first_name`, `last_name`, `NIC`, `addr_house_no`, `addr_line_1`, `addr_line_2`, `addr_city`, `dob`, `marital_status`, `employment_status`, `active_status`, `job_title`, `dept_name`, `pay_grade`, `supervisor_id`) VALUES
+('1', 'Bu', 'Cha', '972247878V', '555', 'Molpe Rd', 'Katubedda', 'Moratuwa', '1997-02-07', 'unmarried', 'permanent', 1, 'QA Engineer', 'Finance', 'grade 1', '1'),
+('2', 'An', 'Jala', '978883365V', '67', 'Temple Rd', 'Dehiwala', NULL, '1997-12-03', 'unmarried', 'permanent', 1, 'QA Engineer', 'HR', 'grade 2', '1');
 
 -- --------------------------------------------------------
 
@@ -313,22 +312,10 @@ INSERT INTO `user` (`employee_id`, `username`, `password`) VALUES
 --
 -- Stand-in structure for view `user_access`
 -- (See below for the actual view)
---
-CREATE TABLE `user_access` (
-`employee_id` varchar(15)
-,`username` varchar(20)
-,`password` varchar(100)
-,`access_level` varchar(20)
-);
-
--- --------------------------------------------------------
-
---
--- Structure for view `user_access`
---
-DROP TABLE IF EXISTS `user_access`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `user_access`  AS  select `user`.`employee_id` AS `employee_id`,`user`.`username` AS `username`,`user`.`password` AS `password`,`job_title`.`access_level` AS `access_level` from ((`user` left join `employee` on((`user`.`employee_id` = `employee`.`employee_id`))) left join `job_title` on((`employee`.`job_title` = `job_title`.`job_title`))) ;
+create view `user_access`  AS 
+select `employee_id`,`username`,`password`,`access_level` from
+`user`  left join `employee` using(`employee_id`)
+left join `job_title` using (`job_title`) ;
 
 --
 -- Indexes for dumped tables
@@ -338,7 +325,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- Indexes for table `department`
 --
 ALTER TABLE `department`
-  ADD PRIMARY KEY (`dept_id`);
+  ADD PRIMARY KEY (`dept_name`);
 
 --
 -- Indexes for table `dependent`
@@ -361,9 +348,9 @@ ALTER TABLE `employee`
   ADD PRIMARY KEY (`employee_id`),
   ADD KEY `job_title` (`job_title`),
   ADD KEY `employment_status` (`employment_status`),
-  ADD KEY `dept_id` (`dept_id`),
   ADD KEY `pay_grade` (`pay_grade`),
-  ADD KEY `supervisor_id` (`supervisor_id`);
+  ADD KEY `supervisor_id` (`supervisor_id`),
+  ADD KEY `dept_name` (`dept_name`);
 
 --
 -- Indexes for table `employee_contact_no`
@@ -456,9 +443,9 @@ ALTER TABLE `emergency_contact`
 ALTER TABLE `employee`
   ADD CONSTRAINT `employee_ibfk_1` FOREIGN KEY (`job_title`) REFERENCES `job_title` (`job_title`),
   ADD CONSTRAINT `employee_ibfk_2` FOREIGN KEY (`employment_status`) REFERENCES `employment_status` (`employment_status`),
-  ADD CONSTRAINT `employee_ibfk_3` FOREIGN KEY (`dept_id`) REFERENCES `department` (`dept_id`),
   ADD CONSTRAINT `employee_ibfk_4` FOREIGN KEY (`pay_grade`) REFERENCES `pay_grade` (`pay_grade`),
-  ADD CONSTRAINT `employee_ibfk_5` FOREIGN KEY (`supervisor_id`) REFERENCES `employee` (`employee_id`);
+  ADD CONSTRAINT `employee_ibfk_5` FOREIGN KEY (`supervisor_id`) REFERENCES `employee` (`employee_id`),
+  ADD CONSTRAINT `employee_ibfk_6` FOREIGN KEY (`dept_name`) REFERENCES `department` (`dept_name`);
 
 --
 -- Constraints for table `employee_contact_no`
