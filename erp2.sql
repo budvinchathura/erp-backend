@@ -14,6 +14,7 @@ SET time_zone = "+00:00";
 
 DROP DATABASE IF EXISTS sql12313982;
 CREATE DATABASE sql12313982;
+USE sql12313982;
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -43,7 +44,7 @@ INSERT INTO `department` (`dept_name`) VALUES
 ('Accounting'),
 ('Production'),
 ('Packaging'),
-('Delivering')
+('Delivering'),
 ('HR');
 
 -- --------------------------------------------------------
@@ -185,7 +186,7 @@ CREATE TABLE `employment_status` (
 INSERT INTO `employment_status` (`employment_status`) VALUES
 ('permanent'),
 ('contract'),
-('freelance'),
+('freelance')
 ;
 
 -- --------------------------------------------------------
