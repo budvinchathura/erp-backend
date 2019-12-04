@@ -1,20 +1,23 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.1
+-- version 4.8.4
 -- https://www.phpmyadmin.net/
 --
--- Host: sql12.freesqldatabase.com
--- Generation Time: Dec 04, 2019 at 12:59 PM
--- Server version: 5.5.58-0ubuntu0.14.04.1
--- PHP Version: 7.0.33-0ubuntu0.16.04.3
+-- Host: 127.0.0.1
+-- Generation Time: Dec 04, 2019 at 06:25 PM
+-- Server version: 10.1.37-MariaDB
+-- PHP Version: 7.3.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
+
 DROP DATABASE IF EXISTS sql12313982;
 CREATE DATABASE sql12313982;
 USE sql12313982;
+
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -28,24 +31,22 @@ USE sql12313982;
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `custom_attribute`
+--
+
+CREATE TABLE `custom_attribute` (
+  `attribute` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `department`
 --
 
 CREATE TABLE `department` (
-  `dept_name` varchar(20) NOT NULL
+  `dept_name` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `department`
---
-
-INSERT INTO `department` (`dept_name`) VALUES
-('Finance'),
-('Accounting'),
-('Production'),
-('Packaging'),
-('Delivering'),
-('HR');
 
 -- --------------------------------------------------------
 
@@ -80,13 +81,6 @@ CREATE TABLE `emergency_contact` (
   `employee_id` varchar(15) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `emergency_contact`
---
-
-INSERT INTO `emergency_contact` (`nic`, `name`, `contact_no`, `employee_id`) VALUES
-('655478902V', 'Guardian', '0718899354', '1');
-
 -- --------------------------------------------------------
 
 --
@@ -106,19 +100,11 @@ CREATE TABLE `employee` (
   `marital_status` varchar(20) DEFAULT NULL,
   `employment_status` varchar(20) DEFAULT NULL,
   `active_status` tinyint(1) DEFAULT NULL,
-  `job_title` varchar(20) DEFAULT NULL,
-  `dept_name` varchar(20) DEFAULT NULL,
+  `job_title` varchar(50) DEFAULT NULL,
+  `dept_name` varchar(50) DEFAULT NULL,
   `pay_grade` varchar(20) DEFAULT NULL,
   `supervisor_id` varchar(15) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `employee`
---
-
-INSERT INTO `employee` (`employee_id`, `first_name`, `last_name`, `nic`, `addr_house_no`, `addr_line_1`, `addr_line_2`, `addr_city`, `dob`, `marital_status`, `employment_status`, `active_status`, `job_title`, `dept_name`, `pay_grade`, `supervisor_id`) VALUES
-('1', 'Bu', 'Cha', '972247878V', '555', 'Molpe Rd', 'Katubedda', 'Moratuwa', '1997-02-07', 'unmarried', 'permanent', 1, 'QA Engineer', 'Finance', 'grade 1', '1'),
-('2', 'An', 'Jala', '978883365V', '67', 'Temple Rd', 'Dehiwala', NULL, '1997-12-03', 'unmarried', 'permanent', 1, 'QA Engineer', 'HR', 'grade 2', '1');
 
 -- --------------------------------------------------------
 
@@ -131,14 +117,6 @@ CREATE TABLE `employee_contact_no` (
   `contact_no` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `employee_contact_no`
---
-
-INSERT INTO `employee_contact_no` (`employee_id`, `contact_no`) VALUES
-('1', '0719715561'),
-('1', '07789857865');
-
 -- --------------------------------------------------------
 
 --
@@ -147,8 +125,8 @@ INSERT INTO `employee_contact_no` (`employee_id`, `contact_no`) VALUES
 
 CREATE TABLE `employee_custom_attributes` (
   `employee_id` varchar(15) NOT NULL,
-  `attribute` varchar(20) NOT NULL,
-  `value` varchar(20) NOT NULL
+  `attribute` varchar(50) NOT NULL,
+  `value` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -162,13 +140,6 @@ CREATE TABLE `employee_email` (
   `email` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `employee_email`
---
-
-INSERT INTO `employee_email` (`employee_id`, `email`) VALUES
-('1', 'bucha@abc.com');
-
 -- --------------------------------------------------------
 
 --
@@ -179,16 +150,6 @@ CREATE TABLE `employment_status` (
   `employment_status` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `employment_status`
---
-
-INSERT INTO `employment_status` (`employment_status`) VALUES
-('permanent'),
-('contract'),
-('freelance')
-;
-
 -- --------------------------------------------------------
 
 --
@@ -196,20 +157,9 @@ INSERT INTO `employment_status` (`employment_status`) VALUES
 --
 
 CREATE TABLE `job_title` (
-  `job_title` varchar(20) NOT NULL,
+  `job_title` varchar(50) NOT NULL,
   `access_level` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `job_title`
---
-
-INSERT INTO `job_title` (`job_title`, `access_level`) VALUES
-('QA Engineer', 'L1'),
-('Juki Machine Operator', 'L1'),
-('Fashion Designer', 'L1'),
-('Manager', 'L2'),
-('HR', 'L3');
 
 -- --------------------------------------------------------
 
@@ -235,16 +185,6 @@ CREATE TABLE `leave_type` (
   `leave_type` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `leave_type`
---
-
-INSERT INTO `leave_type` (`leave_type`) VALUES
-('annual'),
-('casual'),
-('sick'),
-('no pay');
-
 -- --------------------------------------------------------
 
 --
@@ -252,18 +192,9 @@ INSERT INTO `leave_type` (`leave_type`) VALUES
 --
 
 CREATE TABLE `organization_info` (
-  `key` varchar(20) NOT NULL,
-  `value` varchar(20) DEFAULT NULL
+  `key` varchar(50) NOT NULL,
+  `value` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `organization_info`
---
-
-INSERT INTO `organization_info` (`key`, `value`) VALUES
-('Email', 'company@company.com'),
-('Name', 'Jupiter'),
-('Reg. No.', '0123xxx');
 
 -- --------------------------------------------------------
 
@@ -274,15 +205,6 @@ INSERT INTO `organization_info` (`key`, `value`) VALUES
 CREATE TABLE `pay_grade` (
   `pay_grade` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `pay_grade`
---
-
-INSERT INTO `pay_grade` (`pay_grade`) VALUES
-('grade 1'),
-('grade 2'),
-('grade 3');
 
 -- --------------------------------------------------------
 
@@ -296,19 +218,6 @@ CREATE TABLE `pay_grade_leave` (
   `limit` int(3) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `pay_grade_leave`
---
-
-INSERT INTO `pay_grade_leave` (`pay_grade`, `leave_type`, `limit`) VALUES
-('grade 1', 'annual', 40),
-('grade 1', 'no pay', 50),
-('grade 2', 'no pay', 50),
-('grade 2', 'casual', 20),
-('grade 2', 'annual', 50),
-('grade 3', 'no pay', 50),
-('grade 3', 'casual', 30);
-
 -- --------------------------------------------------------
 
 --
@@ -317,37 +226,32 @@ INSERT INTO `pay_grade_leave` (`pay_grade`, `leave_type`, `limit`) VALUES
 
 CREATE TABLE `user` (
   `employee_id` varchar(15) NOT NULL,
-  `username` varchar(20) DEFAULT NULL,
+  `username` varchar(50) DEFAULT NULL,
   `password` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `user`
---
-
-INSERT INTO `user` (`employee_id`, `username`, `password`) VALUES
-('1', 'username', '$2a$10$OtqrZQIHlb522oEZNQiVqeIF9rcNlh8gX.ejTEacgUJsDulgMe/m.'),
-('2', 'username2', '$2a$10$EqsUYpbalwRHobNqorAphuXLy/JAxO8AApOyqeDAn5kDZL.ObX5h2');
-
 -- --------------------------------------------------------
 
 --
--- Stand-in structure for view `user_access`
--- (See below for the actual view)
+-- Table structure for table `user_access`
 --
+
 CREATE TABLE `user_access` (
-`employee_id` varchar(15)
-,`username` varchar(20)
-,`password` varchar(100)
-,`access_level` varchar(20)
-);
-
--- --------------------------------------------------------
-
+  `employee_id` varchar(15) DEFAULT NULL,
+  `username` varchar(50) DEFAULT NULL,
+  `password` varchar(100) DEFAULT NULL,
+  `access_level` varchar(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `custom_attribute`
+--
+ALTER TABLE `custom_attribute`
+  ADD PRIMARY KEY (`attribute`);
 
 --
 -- Indexes for table `department`
@@ -390,7 +294,8 @@ ALTER TABLE `employee_contact_no`
 -- Indexes for table `employee_custom_attributes`
 --
 ALTER TABLE `employee_custom_attributes`
-  ADD PRIMARY KEY (`employee_id`,`attribute`);
+  ADD PRIMARY KEY (`employee_id`,`attribute`),
+  ADD KEY `attribute` (`attribute`);
 
 --
 -- Indexes for table `employee_email`
@@ -480,6 +385,12 @@ ALTER TABLE `employee`
 --
 ALTER TABLE `employee_contact_no`
   ADD CONSTRAINT `employee_contact_no_ibfk_1` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`);
+
+--
+-- Constraints for table `employee_custom_attributes`
+--
+ALTER TABLE `employee_custom_attributes`
+  ADD CONSTRAINT `employee_custom_attributes_ibfk_1` FOREIGN KEY (`attribute`) REFERENCES `custom_attribute` (`attribute`);
 
 --
 -- Constraints for table `employee_email`
