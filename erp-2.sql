@@ -236,12 +236,10 @@ CREATE TABLE `user` (
 -- Table structure for table `user_access`
 --
 
-CREATE TABLE `user_access` (
-  `employee_id` varchar(15) DEFAULT NULL,
-  `username` varchar(50) DEFAULT NULL,
-  `password` varchar(100) DEFAULT NULL,
-  `access_level` varchar(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE VIEW `user_access` AS
+select `employee_id`,`username`,`password`,`access_level` from
+`user`  left join `employee` using(`employee_id`)
+left join `job_title` using (`job_title`);
 
 --
 -- Indexes for dumped tables
