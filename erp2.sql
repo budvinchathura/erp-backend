@@ -38,6 +38,10 @@ CREATE TABLE `department` (
 
 INSERT INTO `department` (`dept_name`) VALUES
 ('Finance'),
+('Accounting'),
+('Production'),
+('Packaging'),
+('Delivering')
 ('HR');
 
 -- --------------------------------------------------------
@@ -177,7 +181,10 @@ CREATE TABLE `employment_status` (
 --
 
 INSERT INTO `employment_status` (`employment_status`) VALUES
-('permanent');
+('permanent'),
+('contract'),
+('freelance'),
+;
 
 -- --------------------------------------------------------
 
@@ -195,7 +202,11 @@ CREATE TABLE `job_title` (
 --
 
 INSERT INTO `job_title` (`job_title`, `access_level`) VALUES
-('QA Engineer', 'L1');
+('QA Engineer', 'L1'),
+('Juki Machine Operator', 'L1'),
+('Fashion Designer', 'L1'),
+('Manager', 'L2'),
+('HR', 'L3');
 
 -- --------------------------------------------------------
 
@@ -227,7 +238,9 @@ CREATE TABLE `leave_type` (
 
 INSERT INTO `leave_type` (`leave_type`) VALUES
 ('annual'),
-('casual');
+('casual'),
+('sick'),
+('no pay');
 
 -- --------------------------------------------------------
 
@@ -265,7 +278,8 @@ CREATE TABLE `pay_grade` (
 
 INSERT INTO `pay_grade` (`pay_grade`) VALUES
 ('grade 1'),
-('grade 2');
+('grade 2'),
+('grade 3');
 
 -- --------------------------------------------------------
 
@@ -285,7 +299,12 @@ CREATE TABLE `pay_grade_leave` (
 
 INSERT INTO `pay_grade_leave` (`pay_grade`, `leave_type`, `limit`) VALUES
 ('grade 1', 'annual', 40),
-('grade 2', 'annual', 50);
+('grade 1', 'no pay', 50),
+('grade 2', 'no pay', 50),
+('grade 2', 'casual', 20),
+('grade 2', 'annual', 50),
+('grade 3', 'no pay', 50),
+('grade 3', 'casual', 30);
 
 -- --------------------------------------------------------
 
@@ -322,12 +341,6 @@ CREATE TABLE `user_access` (
 
 -- --------------------------------------------------------
 
---
--- Structure for view `user_access`
---
-DROP TABLE IF EXISTS `user_access`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`sql12313982`@`%` SQL SECURITY DEFINER VIEW `user_access`  AS  select `user`.`employee_id` AS `employee_id`,`user`.`username` AS `username`,`user`.`password` AS `password`,`job_title`.`access_level` AS `access_level` from ((`user` left join `employee` on((`user`.`employee_id` = `employee`.`employee_id`))) left join `job_title` on((`employee`.`job_title` = `job_title`.`job_title`))) ;
 
 --
 -- Indexes for dumped tables
