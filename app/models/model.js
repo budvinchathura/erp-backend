@@ -65,7 +65,7 @@ model.prototype.find_all = function find_all(params){
                 }
             }
         }
-        db.find([table], params, cb);
+        db.find([table], _params, cb);
     });
 }
 

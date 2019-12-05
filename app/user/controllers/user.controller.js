@@ -1,5 +1,7 @@
 var _user_model = require('../../models/models/user_model');
 var _user_access_model = require('../../models/models/user_access_model');
+const { clean_object } = require("../../helpers/h");
+
 const { login_validation, register_validation } = require('../validation');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
@@ -22,10 +24,9 @@ module.exports.login = (req, res) => {
                 const password_match = await bcrypt.compare(req.body.password,user.password);
                 if (password_match) {
                     // return res.status(200).send({ username: user.username });
-                    delete user.table;
-                    delete user.constructor;
+                    user = clean_object(user);
+                    
                     delete user.password;
-                    delete user.attrs;
                     user = Object.assign({},user);
                     const token = jwt.sign(user,process.env.TOKEN_SECRET);
                     return res.status(200).header('erp-auth-token',token).json({access_level:user.access_level});
