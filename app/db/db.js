@@ -1,19 +1,19 @@
 var mysql = require('mysql');
 var sql="";
 
-// const db_options = {
-//     host:'localhost',
-//     user:'root',
-//     password:'',
-//     database:'erp_sample'
-// }
-
 const db_options = {
-    host:process.env.DB_HOST,
-    user:process.env.DB_USERNAME,
-    password:process.env.DB_PASSWORD,
-    database:process.env.DB_NAME
+    host:'localhost',
+    user:'root',
+    password:'',
+    database:'erp'
 }
+
+// const db_options = {
+//     host:process.env.DB_HOST,
+//     user:process.env.DB_USERNAME,
+//     password:process.env.DB_PASSWORD,
+//     database:process.env.DB_NAME
+// }
 
 var con = mysql.createConnection(db_options);
 
