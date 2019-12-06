@@ -9,9 +9,9 @@ module.exports.view = (req, res) => {
                     delete element.table;
                     delete element.attrs;
                 });
-                res.status(200).json(result);
+                res.status(200).json({result : result});
             } else { 
-                res.status(200).json([]);
+                res.status(200).json({result : []});
             }   
         })
         .catch((err) => {
@@ -20,7 +20,7 @@ module.exports.view = (req, res) => {
 }
 
 
-module.exports.insert = (req, res) => {
+module.exports.insert = (req, res) => {  //TODO verify access level before allowing to use this
     var organization_info_model = new _organization_info_model(req.body);
     organization_info_model.insert()
         .then((result) => {
