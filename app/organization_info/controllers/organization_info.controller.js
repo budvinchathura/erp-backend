@@ -18,3 +18,18 @@ module.exports.view = (req, res) => {
             return res.status(500).json({error:err.message});
         })
 }
+
+
+module.exports.insert = (req, res) => {
+    var organization_info_model = new _organization_info_model(req.body);
+    organization_info_model.insert()
+        .then((result) => {
+            if (result) {
+                res.status(200).json(result);
+            }
+        })
+        .catch((err) => {
+            res.status(500).json({ error: err.message });
+        })
+}
+    

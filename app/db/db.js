@@ -5,7 +5,7 @@ const db_options = {
     host:'localhost',
     user:'root',
     password:'',
-    database:'erp'
+    database:'sql12313982'
 }
 
 // const db_options = {
