@@ -33,3 +33,17 @@ module.exports.insert = (req, res) => {  //TODO verify access level before allow
         })
 }
     
+//TODO update (value only ?)
+
+module.exports.delete = (req, res) => {
+    var organization_info_model = new _organization_info_model();
+    organization_info_model._delete(req.body.key)
+        .then((result) => {
+            if (result) {
+                res.status(200).json(result);
+            }
+        })
+        .catch((err) => {
+            res.status(500).json({error : err.message});
+        })
+}

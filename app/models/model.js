@@ -96,4 +96,22 @@ model.prototype.insert = function insert(){
     });
 }
 
+model.prototype.delete = function del(params){
+    const table = this.table;
+    const _params = {
+        conditions : params
+    };
+
+    return new Promise((resolve, reject) => {
+        const cb = function(error, results, fields){
+            if (error){
+                reject(error);
+            } else {
+                resolve(true);
+            }
+        }
+        db.delete(table,_params,cb);
+    });
+}
+
 module.exports = model;

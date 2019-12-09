@@ -70,3 +70,20 @@ module.exports.update = function update(table,params,data,cb){
     con.query(sql,cb);
     
 }
+
+module.exports.delete = function del(table,params,cb){
+    sql = 'DELETE FROM ';
+    sql = sql.concat(mysql.escapeId(table));
+    if(params.conditions && params.conditions.length > 0){
+        conditions = ' WHERE ';
+        params.conditions.forEach(condition=>{
+            conditions = conditions.concat(condition,' AND ');
+        });
+        conditions = conditions.slice(0,-4);
+    } else {
+        return console.log("no conditions given");    //TODO handle this properly
+    }
+    sql = sql.concat(conditions);
+    console.log(sql);
+    con.query(sql, cb);
+}
