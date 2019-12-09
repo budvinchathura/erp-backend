@@ -20,7 +20,7 @@ module.exports.view = (req, res) => {
 }
 
 
-module.exports.insert = (req, res) => {  //TODO verify access level before allowing to use this
+module.exports.insert = (req, res) => {  
     var organization_info_model = new _organization_info_model(req.body);
     organization_info_model.insert()
         .then((result) => {
@@ -32,4 +32,37 @@ module.exports.insert = (req, res) => {  //TODO verify access level before allow
             res.status(500).json({ error: err.message });
         })
 }
+
+module.exports.bulk_insert = (req, res) => {
+    var models = [];
+    console.log(req.body.data);
+    req.body.data.forEach(function(item, index){
+        var organization_info_model = new _organization_info_model(item);
+        models.push(organization_info_model);
+    });
+    new _organization_info_model().bulk_insert(models)
+        .then((result) => {
+            if(result){
+                res.status(200).json(result);
+            }
+        })
+        .catch((err) => {
+            res.status(500).json({error : err.message});
+        });
+}
+
     
+//TODO update (value only ?)
+
+module.exports.delete = (req, res) => {
+    var organization_info_model = new _organization_info_model();
+    organization_info_model._delete(req.body.key)
+        .then((result) => {
+            if (result) {
+                res.status(200).json(result);
+            }
+        })
+        .catch((err) => {
+            res.status(500).json({error : err.message});
+        })
+}

@@ -22,4 +22,11 @@ organization_info_model.prototype.find_by_key = function(key){
     return this.find_first(params);
 }
 
+organization_info_model.prototype._delete = function(key){
+    var params = [];
+    var param = mysql.escapeId('key').concat(' = ').concat(mysql.escape(key));
+    params.push(param);
+    return this.delete(params);
+}
+
 module.exports = organization_info_model;
