@@ -4,6 +4,7 @@ var _employee_email_model = require('../../models/models/employee_email_model');
 var _employee_custom_model = require('../../models/models/employee_custom_model');
 var _dependent_model = require('../../models/models/dependent_model');
 var _emergency_contact_model = require('../../models/models/emergency_contact_model');
+var _job_title_model = require('../../models/models/job_title_model');
 const { employee_search_by_id_validation } = require('../validation');
 const { clean_object } = require("../../helpers/h");
 
@@ -107,4 +108,33 @@ module.exports.search_by_id = (req, res) => {
         .catch((err) => {
             return res.status(500).json({ error: err.message });
         });
+}
+
+module.exports.view_hr = (req, res) => {
+    var job_title_model = new _job_title_model();
+    job_title_model.find_by_access_level('L3')
+    .then((job_titles) => {
+        if(job_titles){
+            return job_titles[0];
+
+        }else{
+            res.status(400).json({ error: 'Job Title with access level L3 is not in database'});
+        }
+    })
+    .then(async (job_title)=>{
+        if(job_title){
+            var employee_model = new _employee_model();
+            var hr_employee = await employee_model.find_by_job_title(job_title.job_title);
+            if(hr_employee){
+                res.status(200).json({data:clean_object(hr_employee[0])});
+            }else{
+                res.status(400).json({error : 'No employee with L3 access level'})
+            }
+        }
+        // hr_employee = clean_object(hr_employee);
+
+    })
+    .catch((err) => {
+        return res.status(500).json({ error: err.message });
+    });
 }
