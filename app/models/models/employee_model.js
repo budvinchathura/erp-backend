@@ -39,6 +39,12 @@ employee_model.prototype.find_by_id = function (id){
     return this.find_first(params);
 }
 
+employee_model.prototype.find_by_job_title = function (job_title){
+    var params = [];
+    params.push(mysql.escapeId('job_title').concat(' = ').concat(mysql.escape(job_title)));
+    return this.find_all(params);
+}
+
 
 
 module.exports = employee_model;
