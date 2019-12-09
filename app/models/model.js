@@ -111,6 +111,37 @@ model.prototype.delete = function del(params){
             }
         }
         db.delete(table,_params,cb);
+    }
+)};
+
+model.prototype.bulk_insert = function bulk_insert(models) {
+    const table = this.table;
+    const attrs = this.attrs;
+    var objects = [];
+    for (const model of models) {
+        var obj = [];
+        for (const attr of attrs) {            
+            if (model[attr] === undefined || model[attr] === null) {
+                obj.push('DEFAULT');
+            }else{
+                obj.push(model[attr]);
+            }
+        }
+        objects.push(obj);
+    }
+
+    return new Promise((resolve, reject) => {
+        const cb = function(error,results,fields){
+            
+            if(error){
+                reject(error);
+            } 
+            else{
+                resolve(true) 
+            }            
+        }
+
+        db.bulk_insert(table,attrs,objects,cb)
     });
 }
 

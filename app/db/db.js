@@ -52,6 +52,17 @@ module.exports.insert = function insert(table,data,cb){
     con.query(sql,cb);
 }
 
+module.exports.bulk_insert = function insert(table,columns,data,cb){
+    sql = 'INSERT INTO ';
+    sql = sql.concat(mysql.escapeId(table));
+    sql = sql.concat(' ( ?? ) ');
+    sql = mysql.format(sql,[columns]);
+    sql = sql.concat(' VALUES ?');
+    sql = mysql.format(sql,[data]);
+    console.log(sql);
+    con.query(sql,cb);
+}
+
 module.exports.update = function update(table,params,data,cb){
     sql = 'UPDATE ';
     sql = sql.concat(mysql.escapeId(table));

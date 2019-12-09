@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 05, 2019 at 11:38 AM
+-- Generation Time: Dec 09, 2019 at 10:07 AM
 -- Server version: 10.1.34-MariaDB
 -- PHP Version: 7.2.7
 
@@ -22,11 +22,14 @@ SET time_zone = "+00:00";
 --
 -- Database: `erp`
 --
+CREATE DATABASE IF NOT EXISTS `erp` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `erp`;
 
 DELIMITER $$
 --
 -- Procedures
 --
+DROP PROCEDURE IF EXISTS `department_leave`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `department_leave` (IN `dept` VARCHAR(20), IN `start_date` DATE, IN `end_date` DATE)  BEGIN
 	SELECT employee.employee_id,`date`,`leave_type`,`reason`,`dept_name` 
     
@@ -36,6 +39,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `department_leave` (IN `dept` VARCHA
 	order by `date`;
 end$$
 
+DROP PROCEDURE IF EXISTS `employee_leave_taken`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `employee_leave_taken` (IN `emp_id` VARCHAR(15))  BEGIN
 
 SELECT leave_type,`limit`,leaves_taken from (SELECT employee_id, leave_type, `limit` FROM employee NATURAL JOIN pay_grade_leave WHERE employee_id=emp_id) as s NATURAL LEFT JOIN (SELECT employee_id, leave_type, COUNT(*) as leaves_taken FROM `leave` WHERE state="approved" AND (date BETWEEN DATE(CONCAT(YEAR(CURRENT_DATE()),"-01-01"))  AND CURRENT_DATE) GROUP BY employee_id, leave_type) as t;
@@ -50,15 +54,11 @@ DELIMITER ;
 -- Table structure for table `custom_attribute`
 --
 
+DROP TABLE IF EXISTS `custom_attribute`;
 CREATE TABLE `custom_attribute` (
   `attribute` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Truncate table before insert `custom_attribute`
---
-
-TRUNCATE TABLE `custom_attribute`;
 --
 -- Dumping data for table `custom_attribute`
 --
@@ -121,15 +121,11 @@ INSERT INTO `custom_attribute` (`attribute`) VALUES
 -- Table structure for table `department`
 --
 
+DROP TABLE IF EXISTS `department`;
 CREATE TABLE `department` (
   `dept_name` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Truncate table before insert `department`
---
-
-TRUNCATE TABLE `department`;
 --
 -- Dumping data for table `department`
 --
@@ -154,6 +150,7 @@ INSERT INTO `department` (`dept_name`) VALUES
 -- Table structure for table `dependent`
 --
 
+DROP TABLE IF EXISTS `dependent`;
 CREATE TABLE `dependent` (
   `nic` varchar(15) NOT NULL,
   `employee_id` varchar(15) NOT NULL,
@@ -168,11 +165,6 @@ CREATE TABLE `dependent` (
   `email` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Truncate table before insert `dependent`
---
-
-TRUNCATE TABLE `dependent`;
 --
 -- Dumping data for table `dependent`
 --
@@ -222,7 +214,7 @@ INSERT INTO `dependent` (`nic`, `employee_id`, `first_name`, `last_name`, `relat
 ('871118274751', '22638', 'Cleo', 'Bowers', 'son', '93779', '62th FL', 'Shipston-on-Stour', 'Ferrysburg', '0967184483', 'Shifflett@example.com'),
 ('903450954236', '51365', 'Samuel', 'Starks', 'father', '28231', '84th Floor', 'Banchory', 'Strong', '0900184657', 'Monty.Swan5@nowhere.com'),
 ('912055105223', '52663', 'Elijah', 'Hand', 'son', '29568', '6th FL', 'Buckingham', 'Clyde', '0444670349', 'Bauer@example.com'),
-('915365279v', '09929', 'Adolph', 'Peltier', 'son', '26041', '9th FL', 'Banbury', 'Mendham', '0092076979', 'Tiffanie.Romero27@nowhere.com'),
+('915365279v', '03179', 'Adolph', 'Peltier', 'son', '26041', '9th FL', 'Banbury', 'Mendham', '0092076979', 'Tiffanie.Romero27@nowhere.com'),
 ('921269680v', '74078', 'Britt', 'Mckenna', 'daughter', '06419', '9th FL', 'Shoreham-by-Sea', 'Fertile', '0842809051', 'Gable@example.com'),
 ('930498944v', '67589', 'Reinaldo', 'Eubanks', 'son', '68850', '5th FL', 'Ystrad Meurig', 'Mena', '0443196961', 'Jude_High169@example.com'),
 ('933579084v', '48685', 'Rodney', 'Wicks', 'son', '45926', '6th Floor', 'Pencader', 'Kinston', '0329149249', 'Steve.A.Pape@nowhere.com'),
@@ -235,6 +227,7 @@ INSERT INTO `dependent` (`nic`, `employee_id`, `first_name`, `last_name`, `relat
 -- Table structure for table `emergency_contact`
 --
 
+DROP TABLE IF EXISTS `emergency_contact`;
 CREATE TABLE `emergency_contact` (
   `nic` varchar(15) NOT NULL,
   `name` varchar(20) DEFAULT NULL,
@@ -242,11 +235,6 @@ CREATE TABLE `emergency_contact` (
   `employee_id` varchar(15) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Truncate table before insert `emergency_contact`
---
-
-TRUNCATE TABLE `emergency_contact`;
 --
 -- Dumping data for table `emergency_contact`
 --
@@ -309,6 +297,7 @@ INSERT INTO `emergency_contact` (`nic`, `name`, `contact_no`, `employee_id`) VAL
 -- Table structure for table `employee`
 --
 
+DROP TABLE IF EXISTS `employee`;
 CREATE TABLE `employee` (
   `employee_id` varchar(15) NOT NULL,
   `first_name` varchar(20) DEFAULT NULL,
@@ -328,11 +317,6 @@ CREATE TABLE `employee` (
   `supervisor_id` varchar(15) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Truncate table before insert `employee`
---
-
-TRUNCATE TABLE `employee`;
 --
 -- Dumping data for table `employee`
 --
@@ -395,16 +379,12 @@ INSERT INTO `employee` (`employee_id`, `first_name`, `last_name`, `nic`, `addr_h
 -- Table structure for table `employee_contact_no`
 --
 
+DROP TABLE IF EXISTS `employee_contact_no`;
 CREATE TABLE `employee_contact_no` (
   `employee_id` varchar(15) NOT NULL,
   `contact_no` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Truncate table before insert `employee_contact_no`
---
-
-TRUNCATE TABLE `employee_contact_no`;
 --
 -- Dumping data for table `employee_contact_no`
 --
@@ -467,72 +447,12 @@ INSERT INTO `employee_contact_no` (`employee_id`, `contact_no`) VALUES
 -- Table structure for table `employee_custom_attributes`
 --
 
+DROP TABLE IF EXISTS `employee_custom_attributes`;
 CREATE TABLE `employee_custom_attributes` (
   `employee_id` varchar(15) NOT NULL,
   `attribute` varchar(50) NOT NULL,
   `value` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Truncate table before insert `employee_custom_attributes`
---
-
-TRUNCATE TABLE `employee_custom_attributes`;
---
--- Dumping data for table `employee_custom_attributes`
---
-
-INSERT INTO `employee_custom_attributes` (`employee_id`, `attribute`, `value`) VALUES
-('00392', 'GG', 'm'),
-('03175', 'jqoVUxaIxDMQpQQguRjTShnYnBusvdcueLGUyQkczdGVyGnNOP', 'xOECXnYMcb'),
-('08389', 'RU', 'Qgl'),
-('11004', 'pXQIFS', 'arOINDFdY'),
-('11083', 'qeaxGPehSZRmdlGhlSgLIkQctYFhaXaMDtwKfOztdhHCsIbZFC', 'NtHQz'),
-('16342', 'sZPBTuqSqLYxSkTnbZsOQ', 'vnsEltAaOAVBCQvfiwzdnGjzyY'),
-('19536', 'wRQAjtGGcmZdEVXrzHhd', 'UQgk'),
-('21450', 'qBvpsZmNIcxtA', 'PWSaoGCdVtYvxTAHbXMJcErYLSZVZbKnqZpYIfylTfgkDuhXq'),
-('22085', 'fQwJUXGNsgxbRnkN', 'ucruY'),
-('26403', 'FvOGIFcIdTt', 'LRcyPiICRydqnkB'),
-('27349', 'ytA', 'UaH'),
-('27992', 'GAaSWYkwu', 'dB'),
-('30344', 'vNIvEDSnJUMjc', 'KPsUeoPcsLMIpPaJVIyIaPKVbq'),
-('30664', 'ZWPAYwYDhnVDSNYWAmK', 'M'),
-('32865', 'lULgACABvKTfBHucSpsTXc', 'kvJTtdhsbHNTRaNciSkhKFDOzrmszkAjbux'),
-('33671', 'tZLKoXhVRIFPqc', 'MHZVoLofYoxN'),
-('35040', 'DAScJrAw', 'hnCbDqULPdhslyAtxOE'),
-('35911', 'ugDyKUAoGbZAAAYZ', 'aWUVGY'),
-('39848', 'iCyGkUXPdcrGkucwDdFXVmukypCeayxSXekMe', 'bbqBzlBIfIFiKJNyQ'),
-('41578', 'qHQ', 'AviFYLFpCvIdUcuDUcqhksCOyjurRFEPyUoiJVRw'),
-('41899', 'siFQeOBTLiPQDtrR', 'KaSAUjiunO'),
-('42944', 'VVjytCTYHJxQJMAaoj', 'dMSsyRpdNrJmLRPzoCWJ'),
-('43610', 'uzAnNgFSDMcliuMMmXaAixY', 'DDNyvKBcLOTBuvRXSCoaEjUdmDPpFhrGyAhdCVNL'),
-('44894', 'cVbHAHfmskzqsykakhaVOZXpPxTpyPEFMBpZlGWof', 'LHzML'),
-('50797', 'OjLncJEGHkXMd', 'iLkjvOKkvajQSkjjl'),
-('54585', 'ADih', 'N'),
-('57878', 'dMYx', 'FdPNTjJcOBwefXXaCDmXHKeXFhAXhA'),
-('58886', 'RJmfUzGXoA', 'oOHZ'),
-('59510', 't', 'nEDDlwmJCJMHbaYyfmSevSwrrhNntfImopDoxWUTTJfGhnMHWE'),
-('61144', 'XFmdSwqEvUQjvfppFQBHmkjQiYvYYUQcVMkQE', 'kEzFp'),
-('61988', 'JnaImCtMIo', 'cKWt'),
-('64683', 'cunZYklDh', 'KB'),
-('65701', 'EISZMQZZMKQvUmsA', 'aeWlcsAQHfI'),
-('66974', 'MqXQXcYKCEZIyJeWwPrhccJmNPYgJp', 'aXFQfNepjRvRnhuln'),
-('67161', 'txtQP', 'NcVLWSVeYmjL'),
-('67173', 'PEXsBBAR', 'v'),
-('68576', 'WfLLljqNlM', 'OvraR'),
-('72124', 'PQgsx', 'JFDVJbokJAsemvosEVdxOqQyZAICFQglDOyvPoXClbdVNvIjaB'),
-('75249', 'eDdl', 'BZvGkPPQiqLeLmWAznTGjvhkFRYtTTBJWHLrNeqFlcqknKIkk'),
-('75489', 'UvFkclTVnufoUf', 'ALMYtrKeQnm'),
-('79877', 'EOHVBmiOuDTjZkLbvjCHgBcAsBlZIMXBBVUislzgShjVfNSqlM', 'buJMVcCHqKaTYapgsOgYxenYjdZKZlTadEZDkvqWumsMoFsQCa'),
-('80927', 'OEUgoefQisqayiSGrePppZNBEkMtpSpwFaRR', 'CsnUjTWhK'),
-('85726', 'anRDy', 'LhzkBppZLh'),
-('88655', 'RnoGQjexHlqO', 'rkwWUjpw'),
-('93954', 'PcLWjdQvuGLM', 'PiXYpqspWjjECto'),
-('94047', 'ccrBw', 'jmzhbfbAQRLtdfTHUSrUXornddftQsibcCFXTXjBgvnMRQOpkP'),
-('94731', 'uSBODmESdxaiAvBEglTn', 'gdVmalzPhNFSZGHCdXXYqohijeMZvUkeAjAzBEZCLUcyXNSwhK'),
-('99642', 'sXUiWDNrADCmOjEljJWznBUDpa', 'mKjnyxjSyraxpbUNIaYXUQ'),
-('99833', 'i', 'WqA'),
-('99863', 'syTnbYruGvxgeHSQ', 'YxMcCzymPGqasPpXinChODrccUsyejCgRUR');
 
 -- --------------------------------------------------------
 
@@ -540,16 +460,12 @@ INSERT INTO `employee_custom_attributes` (`employee_id`, `attribute`, `value`) V
 -- Table structure for table `employee_email`
 --
 
+DROP TABLE IF EXISTS `employee_email`;
 CREATE TABLE `employee_email` (
   `employee_id` varchar(15) NOT NULL,
   `email` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Truncate table before insert `employee_email`
---
-
-TRUNCATE TABLE `employee_email`;
 --
 -- Dumping data for table `employee_email`
 --
@@ -612,15 +528,11 @@ INSERT INTO `employee_email` (`employee_id`, `email`) VALUES
 -- Table structure for table `employment_status`
 --
 
+DROP TABLE IF EXISTS `employment_status`;
 CREATE TABLE `employment_status` (
   `employment_status` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Truncate table before insert `employment_status`
---
-
-TRUNCATE TABLE `employment_status`;
 --
 -- Dumping data for table `employment_status`
 --
@@ -639,16 +551,12 @@ INSERT INTO `employment_status` (`employment_status`) VALUES
 -- Table structure for table `job_title`
 --
 
+DROP TABLE IF EXISTS `job_title`;
 CREATE TABLE `job_title` (
   `job_title` varchar(50) NOT NULL,
   `access_level` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Truncate table before insert `job_title`
---
-
-TRUNCATE TABLE `job_title`;
 --
 -- Dumping data for table `job_title`
 --
@@ -711,6 +619,7 @@ INSERT INTO `job_title` (`job_title`, `access_level`) VALUES
 -- Table structure for table `leave`
 --
 
+DROP TABLE IF EXISTS `leave`;
 CREATE TABLE `leave` (
   `employee_id` varchar(15) NOT NULL,
   `date` date NOT NULL,
@@ -719,11 +628,6 @@ CREATE TABLE `leave` (
   `state` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Truncate table before insert `leave`
---
-
-TRUNCATE TABLE `leave`;
 --
 -- Dumping data for table `leave`
 --
@@ -786,15 +690,11 @@ INSERT INTO `leave` (`employee_id`, `date`, `leave_type`, `reason`, `state`) VAL
 -- Table structure for table `leave_type`
 --
 
+DROP TABLE IF EXISTS `leave_type`;
 CREATE TABLE `leave_type` (
   `leave_type` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Truncate table before insert `leave_type`
---
-
-TRUNCATE TABLE `leave_type`;
 --
 -- Dumping data for table `leave_type`
 --
@@ -811,21 +711,20 @@ INSERT INTO `leave_type` (`leave_type`) VALUES
 -- Table structure for table `organization_info`
 --
 
+DROP TABLE IF EXISTS `organization_info`;
 CREATE TABLE `organization_info` (
   `key` varchar(50) NOT NULL,
   `value` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Truncate table before insert `organization_info`
---
-
-TRUNCATE TABLE `organization_info`;
---
 -- Dumping data for table `organization_info`
 --
 
 INSERT INTO `organization_info` (`key`, `value`) VALUES
+('1', '2)'),
+('3', '4'),
+('5', '6'),
 ('Address', 'cdrWAzGATxj'),
 ('Email', 'wCzmEWHKzXW'),
 ('Name', 'IgVQTGJJDNC'),
@@ -838,15 +737,11 @@ INSERT INTO `organization_info` (`key`, `value`) VALUES
 -- Table structure for table `pay_grade`
 --
 
+DROP TABLE IF EXISTS `pay_grade`;
 CREATE TABLE `pay_grade` (
   `pay_grade` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Truncate table before insert `pay_grade`
---
-
-TRUNCATE TABLE `pay_grade`;
 --
 -- Dumping data for table `pay_grade`
 --
@@ -863,17 +758,13 @@ INSERT INTO `pay_grade` (`pay_grade`) VALUES
 -- Table structure for table `pay_grade_leave`
 --
 
+DROP TABLE IF EXISTS `pay_grade_leave`;
 CREATE TABLE `pay_grade_leave` (
   `pay_grade` varchar(20) NOT NULL,
   `leave_type` varchar(20) NOT NULL,
   `limit` int(3) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Truncate table before insert `pay_grade_leave`
---
-
-TRUNCATE TABLE `pay_grade_leave`;
 --
 -- Dumping data for table `pay_grade_leave`
 --
@@ -902,17 +793,13 @@ INSERT INTO `pay_grade_leave` (`pay_grade`, `leave_type`, `limit`) VALUES
 -- Table structure for table `user`
 --
 
+DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `employee_id` varchar(15) NOT NULL,
   `username` varchar(50) DEFAULT NULL,
   `password` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Truncate table before insert `user`
---
-
-TRUNCATE TABLE `user`;
 --
 -- Dumping data for table `user`
 --
@@ -926,6 +813,7 @@ INSERT INTO `user` (`employee_id`, `username`, `password`) VALUES
 -- Stand-in structure for view `user_access`
 -- (See below for the actual view)
 --
+DROP VIEW IF EXISTS `user_access`;
 CREATE TABLE `user_access` (
 `employee_id` varchar(15)
 ,`username` varchar(50)
@@ -1089,7 +977,8 @@ ALTER TABLE `employee_contact_no`
 -- Constraints for table `employee_custom_attributes`
 --
 ALTER TABLE `employee_custom_attributes`
-  ADD CONSTRAINT `employee_custom_attributes_ibfk_1` FOREIGN KEY (`attribute`) REFERENCES `custom_attribute` (`attribute`);
+  ADD CONSTRAINT `employee_custom_attributes_ibfk_1` FOREIGN KEY (`attribute`) REFERENCES `custom_attribute` (`attribute`),
+  ADD CONSTRAINT `employee_custom_attributes_ibfk_2` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`);
 
 --
 -- Constraints for table `employee_email`
