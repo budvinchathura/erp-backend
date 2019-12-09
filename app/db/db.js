@@ -5,7 +5,7 @@ const db_options = {
     host:'localhost',
     user:'root',
     password:'',
-    database:'sql12313982'
+    database:'erp'
 }
 
 // const db_options = {
@@ -48,6 +48,17 @@ module.exports.insert = function insert(table,data,cb){
     sql = sql.concat(mysql.escapeId(table));
     sql = sql.concat(' SET ? ');
     sql = mysql.format(sql,data);
+    console.log(sql);
+    con.query(sql,cb);
+}
+
+module.exports.bulk_insert = function insert(table,columns,data,cb){
+    sql = 'INSERT INTO ';
+    sql = sql.concat(mysql.escapeId(table));
+    sql = sql.concat(' ( ?? ) ');
+    sql = mysql.format(sql,[columns]);
+    sql = sql.concat(' VALUES ?');
+    sql = mysql.format(sql,[data]);
     console.log(sql);
     con.query(sql,cb);
 }
