@@ -5,8 +5,15 @@ const db_options = {
     host:'localhost',
     user:'root',
     password:'',
-    database:'sql12313982'
+    database:'erp'
 }
+
+// const db_options = {
+//     host:'localhost',
+//     user:'root',
+//     password:'',
+//     database:'sql12313982'
+// }
 
 // const db_options = {
 //     host:process.env.DB_HOST,
