@@ -19,7 +19,6 @@ user_access_model.prototype = Object.create(model.prototype);
 user_access_model.prototype.find_by_username = function (username){
     var params = [];
     params.push(mysql.escapeId('username').concat(' = ').concat(mysql.escape(username)));
-    // console.log(params);
     return this.find_first(params);
 }
 

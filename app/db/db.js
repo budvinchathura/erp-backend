@@ -105,3 +105,20 @@ module.exports.delete = function del(table,params,cb){
     console.log(sql);
     con.query(sql, cb);
 }
+
+//params should be given in order
+module.exports.call = function call(procedure, params, cb){
+    sql = 'CALL ';
+    sql = sql.concat(mysql.escapeId(procedure));
+    var conditions = '('; 
+    if(params && params.length > 0){
+        params.forEach((condition) => {
+            conditions = conditions.concat(condition, ',');
+        })
+        conditions = conditions.slice(0,-1)
+    }
+    conditions = conditions.concat(')');
+    sql = sql.concat(conditions);
+    console.log(sql);
+    con.query(sql, cb);
+}
