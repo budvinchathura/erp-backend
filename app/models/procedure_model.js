@@ -29,7 +29,7 @@ procedure_model.prototype.view = function view(params){
                 }
             }
         }
-        db.call(procedure, params, cb);
+        db.call_proc(procedure, params, cb);
     });
 }
 
