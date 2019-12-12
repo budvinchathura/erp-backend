@@ -8,13 +8,22 @@ var _emp_leave_taken_procedure_model = require ('../../models/models/employee_le
 const { employee_search_by_id_validation } = require('../validation');
 const { clean_object } = require("../../helpers/h");
 
-module.exports.search_by_id = (req, res) => {
+module.exports.search_other_by_id = (req, res) => {
     const { error } = employee_search_by_id_validation(req.body);
     if (error) {
         return res.status(400).json({ error: error.details[0].message });
+    } else {
+        return search_by_id(req, res, req.body.employee_id);
     }
+}
+
+module.exports.search_self = (req, res) => {
+    return search_by_id(req, res, req.user.employee_id);
+}
+
+const search_by_id = (req, res, emp_id) => {
     var employee_model = new _employee_model();
-    employee_model.find_by_id(req.body.employee_id)
+    employee_model.find_by_id(emp_id)
         .then((employee) => {
             if (employee) {
                 employee = clean_object(employee);
@@ -109,6 +118,7 @@ module.exports.search_by_id = (req, res) => {
             return res.status(500).json({ error: err.message });
         });
 }
+
 
 module.exports.view_employee_leave = (req, res) => {
     var employee_leave_taken_procedure_model = new _emp_leave_taken_procedure_model();
