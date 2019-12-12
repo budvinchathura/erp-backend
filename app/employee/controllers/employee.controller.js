@@ -9,7 +9,7 @@ var _emp_leave_taken_procedure_model = require ('../../models/models/employee_le
 const { employee_search_by_id_validation } = require('../validation');
 const { clean_object } = require("../../helpers/h");
 
-module.exports.search_other_by_id = (req, res) => {
+module.exports.search_by_id = (req, res) => {
     const { error } = employee_search_by_id_validation(req.body);
     if (error) {
         return res.status(400).json({ error: error.details[0].message });
@@ -18,7 +18,7 @@ module.exports.search_other_by_id = (req, res) => {
     }
 }
 
-module.exports.search_self = (req, res) => {
+module.exports.profile = (req, res) => {
     return search_by_id(req, res, req.user.employee_id);
 }
 
