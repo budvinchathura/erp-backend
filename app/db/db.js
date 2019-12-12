@@ -107,7 +107,7 @@ module.exports.delete = function del(table,params,cb){
 }
 
 //params should be given in order
-module.exports.call = function call(procedure, params, cb){
+module.exports.call_proc = function call(procedure, params, cb){
     sql = 'CALL ';
     sql = sql.concat(mysql.escapeId(procedure));
     var conditions = '('; 
