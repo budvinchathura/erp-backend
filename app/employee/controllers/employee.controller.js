@@ -147,7 +147,7 @@ module.exports.view_hr = (req, res) => {
     .catch((err) => {
         return res.status(500).json({ error: err.message });
     });
-
+}
 module.exports.view_employee_leave = (req, res) => {
     var employee_leave_taken_procedure_model = new _emp_leave_taken_procedure_model();
     employee_leave_taken_procedure_model._view(req.user.employee_id)
@@ -163,5 +163,4 @@ module.exports.view_employee_leave = (req, res) => {
         .catch((error) => {
             return res.status(500).json({error : error.message});
         })
-}
-}
+    }
