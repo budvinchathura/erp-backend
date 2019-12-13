@@ -1,5 +1,6 @@
 var _pay_grade_model = require('../../models/models/pay_grade_model');
 const { clean_object } = require("../../helpers/h");
+const {pay_grade_add_validation} = require("../vaidation")
 
 
 
@@ -20,4 +21,19 @@ module.exports.view = (req, res) => {
         .catch((err) => {
             return res.status(500).json({error:err.message});
         })
+}
+
+module.exports.add = (req,res)=>{
+    const { error } = pay_grade_add_validation(req.body);
+    if (error) {
+        return res.status(400).json({ error: error.details[0].message });
+    }else{
+        var pay_grade_model = new _pay_grade_model(req.body);
+        pay_grade_model.insert()
+        .then((result) => {
+            return res.status(200).json({});
+        }).catch((err) => {
+            return res.status(500).json({ error: err.message });
+        });
+    }
 }
