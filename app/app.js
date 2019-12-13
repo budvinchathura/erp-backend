@@ -7,6 +7,7 @@ const report_route = require('./report/routes');
 const employee_route = require('./employee/routes');
 const job_title_route = require('./job_title/routes');
 const pay_grade_route = require('./pay_grade/routes');
+const department_route = require('./department/routes');
 var cors = require('cors')
 
 var app = express();
@@ -30,6 +31,7 @@ app.use('/report',report_route);
 app.use('/employee',employee_route);
 app.use('/job-title',job_title_route);
 app.use('/pay-grade',pay_grade_route);
+app.use('/department',department_route);
 app.use(error_route);
 
 module.exports = app;
