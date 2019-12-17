@@ -96,6 +96,38 @@ model.prototype.insert = function insert(){
     });
 }
 
+
+model.prototype.update = function update(params){
+    const _params = {
+        conditions : params
+    }
+    const table = this.table;
+    const attrs = this.attrs;
+    var obj = {};
+    for(const attr of attrs){
+        obj[attr] = this[attr]
+        if(obj[attr]===undefined || obj[attr]===null){
+            obj[attr] = 'DEFAULT'
+        }
+    }
+
+    return new Promise((resolve, reject) => {
+        const cb = function(error,results,fields){
+            
+            if(error){
+                reject(error);
+            } 
+            else{
+                resolve(true) 
+            }            
+        }
+
+        db.update(table,_params,obj,cb)
+    });
+}
+
+
+
 model.prototype.delete = function del(params){
     const table = this.table;
     const _params = {
