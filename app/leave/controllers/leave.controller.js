@@ -1,8 +1,9 @@
 var _leave_limit_model = require('../../models/models/leave_limit_model');
+var _leave_model = require('../../models/models/leave_model');
 var _emp_leave_taken_procedure_model = require ('../../models/models/employee_leave_taken_procedure_model');
 
 const { clean_object } = require("../../helpers/h");
-const {leave_limit_add_update_validation} = require("../validation");
+const {leave_limit_add_update_validation,leave_add_validation} = require("../validation");
 
 
 module.exports.view_limits = (req, res) => {
@@ -82,4 +83,20 @@ module.exports.remaining = (req, res) => {
         .catch((error) => {
             return res.status(500).json({ error: error.message });
         })
+}
+
+module.exports.apply_leave = (req,res)=>{
+    const { error } = leave_add_validation(req.body);
+    if (error) {
+        return res.status(400).json({ error: error.details[0].message });
+    }else{
+        var leave_model = new _leave_model(req.body);
+        leave_model.employee_id = req.user.employee_id;
+        leave_model.apply_leave()
+        .then((result) => {
+            return res.status(200).json({});
+        }).catch((error) => {
+            return res.status(500).json({ error: error.message });
+        });
+    }
 }
