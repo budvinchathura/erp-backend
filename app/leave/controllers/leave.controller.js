@@ -68,7 +68,7 @@ module.exports.update_limit = (req,res)=>{
 
 
 
-module.exports.remaining = (req, res) => {
+module.exports.taken = (req, res) => {
     var employee_leave_taken_procedure_model = new _emp_leave_taken_procedure_model();
     employee_leave_taken_procedure_model._view(req.user.employee_id)
         .then((results) => {
@@ -99,4 +99,22 @@ module.exports.apply_leave = (req,res)=>{
             return res.status(500).json({ error: error.message });
         });
     }
+}
+
+module.exports.history = (req,res)=>{
+    var leave_model = new _leave_model();
+    leave_model.find_by_employee_id(req.user.employee_id)
+    .then((leaves) => {
+        if(leaves){
+            for (let index = 0; index < leaves.length; index++) {
+                leaves[index] = clean_object(leaves[index]);                
+            }
+            res.status(200).json(leaves);
+        } else { 
+            res.status(200).json([]);
+        }
+        
+    }).catch((error) => {
+        return res.status(500).json({ error: error.message });
+    });
 }

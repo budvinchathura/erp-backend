@@ -6,7 +6,8 @@ const {minimum_access_level_required} = require('../common/middleware/access_lev
 router.get('/limits', [valid_jwt_needed,minimum_access_level_required(['L1','L2','L3'])],leave_controller.view_limits);
 router.patch('/limit', [valid_jwt_needed,minimum_access_level_required(['L1','L2','L3'])],leave_controller.update_limit);
 router.put('/limit', [valid_jwt_needed,minimum_access_level_required(['L1','L2','L3'])],leave_controller.add_limit);
-router.get('/remaining', [valid_jwt_needed,minimum_access_level_required(['L1','L2','L3'])], leave_controller.remaining);
+router.get('/taken', [valid_jwt_needed,minimum_access_level_required(['L1','L2','L3'])], leave_controller.taken);
 router.post('/apply', [valid_jwt_needed,minimum_access_level_required(['L1','L2','L3'])], leave_controller.apply_leave);
+router.get('/history', [valid_jwt_needed,minimum_access_level_required(['L1','L2','L3'])], leave_controller.history);
 
 module.exports = router;

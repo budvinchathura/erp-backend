@@ -24,6 +24,12 @@ leave_model.prototype.apply_leave = function(){
     return this.insert();
 }
 
+leave_model.prototype.find_by_employee_id = function (employee_id) {
+    var params = [];
+    params.push(mysql.escapeId('employee_id').concat(' = ').concat(mysql.escape(employee_id)));
+    return this.find_all(params);
+}
+
 
 
 
