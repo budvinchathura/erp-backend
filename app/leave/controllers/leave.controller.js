@@ -50,7 +50,11 @@ module.exports.update_limit = (req,res)=>{
         var leave_limit_model = new _leave_limit_model(req.body);
         leave_limit_model._update()
         .then((result) => {
-            return res.status(200).json({});
+            if(result.affectedRows > 0){
+                return res.status(200).json({});
+            }else{
+                return res.status(400).json({error:"invalid content"});
+            }
         }).catch((err) => {
             return res.status(500).json({ error: err.message });
         });
