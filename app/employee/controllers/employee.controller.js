@@ -5,7 +5,6 @@ var _employee_custom_model = require('../../models/models/employee_custom_model'
 var _dependent_model = require('../../models/models/dependent_model');
 var _emergency_contact_model = require('../../models/models/emergency_contact_model');
 var _job_title_model = require('../../models/models/job_title_model');
-var _emp_leave_taken_procedure_model = require ('../../models/models/employee_leave_taken_procedure_model');
 const { employee_search_by_id_validation } = require('../validation');
 const { clean_object } = require("../../helpers/h");
 
@@ -148,19 +147,4 @@ module.exports.view_hr = (req, res) => {
         return res.status(500).json({ error: err.message });
     });
 }
-module.exports.view_employee_leave = (req, res) => {
-    var employee_leave_taken_procedure_model = new _emp_leave_taken_procedure_model();
-    employee_leave_taken_procedure_model._view(req.user.employee_id)
-        .then((results) => {
-            if(results){
-                results.forEach(element => {
-                    delete element.procedure;
-                    delete element.attrs;
-                });
-                res.status(200).json({result : results});
-            }
-        })
-        .catch((error) => {
-            return res.status(500).json({error : error.message});
-        })
-    }
+

@@ -1,4 +1,6 @@
 var _leave_limit_model = require('../../models/models/leave_limit_model');
+var _emp_leave_taken_procedure_model = require ('../../models/models/employee_leave_taken_procedure_model');
+
 const { clean_object } = require("../../helpers/h");
 const {leave_limit_add_update_validation} = require("../validation");
 
@@ -61,4 +63,23 @@ module.exports.update_limit = (req,res)=>{
 
     }    
 
+}
+
+
+
+module.exports.remaining = (req, res) => {
+    var employee_leave_taken_procedure_model = new _emp_leave_taken_procedure_model();
+    employee_leave_taken_procedure_model._view(req.user.employee_id)
+        .then((results) => {
+            if (results) {
+                results.forEach(element => {
+                    delete element.procedure;
+                    delete element.attrs;
+                });
+                res.status(200).json({ result: results });
+            }
+        })
+        .catch((error) => {
+            return res.status(500).json({ error: error.message });
+        })
 }
