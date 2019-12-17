@@ -29,6 +29,13 @@ job_title_model.prototype.find_by_access_level = function(access_level){
     return this.find_all(params);
 }
 
+job_title_model.prototype._update = function(){
+    var params = [];
+    params.push(mysql.escapeId('job_title').concat(' = ').concat(mysql.escape(this.job_title)));
+
+    return this.update(params);
+}
+
 
 
 module.exports = job_title_model;
