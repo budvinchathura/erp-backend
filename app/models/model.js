@@ -105,9 +105,9 @@ model.prototype.update = function update(params){
     const attrs = this.attrs;
     var obj = {};
     for(const attr of attrs){
-        obj[attr] = this[attr]
-        if(obj[attr]===undefined || obj[attr]===null){
-            obj[attr] = 'DEFAULT'
+        
+        if(!(this[attr]===undefined || this[attr]===null)){
+            obj[attr] = this[attr]
         }
     }
 
@@ -118,7 +118,7 @@ model.prototype.update = function update(params){
                 reject(error);
             } 
             else{
-                resolve(true) 
+                resolve({changedRows:results.changedRows,affectedRows:results.affectedRows}) 
             }            
         }
 
