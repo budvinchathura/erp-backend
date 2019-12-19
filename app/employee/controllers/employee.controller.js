@@ -5,6 +5,9 @@ var _employee_custom_model = require('../../models/models/employee_custom_model'
 var _dependent_model = require('../../models/models/dependent_model');
 var _emergency_contact_model = require('../../models/models/emergency_contact_model');
 var _job_title_model = require('../../models/models/job_title_model');
+var _employment_status_model = require('../../models/models/employment_status_model');
+var _pay_grade_model = require('../../models/models/pay_grade_model');
+var _department_model = require('../../models/models/department_model');
 const { employee_search_by_id_validation } = require('../validation');
 const { clean_object } = require("../../helpers/h");
 
@@ -146,5 +149,56 @@ module.exports.view_hr = (req, res) => {
     .catch((err) => {
         return res.status(500).json({ error: err.message });
     });
+}
+
+module.exports.form_attributes = (req,res)=>{
+    var form_attributes = {};
+    var employment_status_model = new _employment_status_model();
+    employment_status_model._find_all()
+    .then((statuses) => {
+        form_attributes.employment_status = [];
+        statuses.forEach((status) => {
+            form_attributes.employment_status.push(status.employment_status)
+        });
+        return form_attributes;
+        
+    })
+    .then(async (form_attributes)=>{
+        var job_title_model = new _job_title_model();
+        const job_titles = await job_title_model._find_all();
+        
+        for (let index = 0; index < job_titles.length; index++) {
+            job_titles[index] = clean_object(job_titles[index]);            
+        }
+        form_attributes.job_title = job_titles;
+        
+        return form_attributes;
+    })
+    .then(async (form_attributes)=>{
+        form_attributes.dept_name=[];
+        var department_model = new _department_model();
+        const department_names = await department_model._find_all();
+        department_names.forEach((department) => {
+            form_attributes.dept_name.push(department.dept_name);
+        });
+        return form_attributes;
+    })
+    .then(async (form_attributes)=>{
+        form_attributes.pay_grade = [];
+        var pay_grade_model = new _pay_grade_model();
+        const pay_grades = await pay_grade_model._find_all();
+        pay_grades.forEach((pay_grade) => {
+            form_attributes.pay_grade.push(pay_grade.pay_grade);
+        });
+        return form_attributes;
+        
+    })
+    .then((form_attributes)=>{
+        return res.status(200).json(form_attributes);
+    })
+    .catch((err) => {
+        return res.status(500).json({ error: err.message });
+    });
+
 }
 

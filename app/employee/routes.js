@@ -5,5 +5,6 @@ const {minimum_access_level_required} = require('../common/middleware/access_lev
 router.post('/view',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3']),employee_controller.search_by_id]);
 router.get('/profile',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3']),employee_controller.profile]);
 router.get('/hr', [valid_jwt_needed,minimum_access_level_required(['Admin','L3','L1'])], employee_controller.view_hr);
+router.get('/form-attributes', [valid_jwt_needed,minimum_access_level_required(['Admin','L3','L1'])], employee_controller.form_attributes);
 
 module.exports = router
