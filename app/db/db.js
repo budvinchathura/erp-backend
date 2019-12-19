@@ -5,7 +5,8 @@ const db_options = {
     host:'localhost',
     user:'root',
     password:'',
-    database:'erp'
+    database:'erp',
+    multipleStatements:true
 }
 
 // const db_options = {
@@ -125,5 +126,5 @@ module.exports.call_proc = function call(procedure, params, cb){
 
 module.exports.exec_query = function exec_query(sql, cb){
     console.log(sql);
-    con.query(sql, db);
+    con.query(sql, cb);
 }

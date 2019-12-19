@@ -179,7 +179,7 @@ model.prototype.bulk_insert = function bulk_insert(models) {
 
 model.prototype.get_db_object = function get_db_object(){
     var obj = {};
-    for(const attr of attrs){
+    for(const attr of this.attrs){
         obj[attr] = this[attr]
         if(obj[attr]===undefined || obj[attr]===null){
             obj[attr] = 'DEFAULT'
