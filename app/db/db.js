@@ -122,3 +122,8 @@ module.exports.call_proc = function call(procedure, params, cb){
     console.log(sql);
     con.query(sql, cb);
 }
+
+module.exports.exec_query = function exec_query(sql, cb){
+    console.log(sql);
+    con.query(sql, db);
+}

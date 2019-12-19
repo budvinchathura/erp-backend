@@ -199,6 +199,15 @@ module.exports.form_attributes = (req,res)=>{
     .catch((err) => {
         return res.status(500).json({ error: err.message });
     });
-
 }
+
+module.exports.add = (req,res) => {
+    var employee_model = new employee_model(req.body);
+    var employee_contact_model = new employee_contact_model();
+    var employee_email_model = new employee_email_model();
+    var emergency_contact_model = new emergency_contact_model();
+    var dependent_model = new dependent_model();
+    var employee_custom_model = new employee_custom_model();
+}
+
 
