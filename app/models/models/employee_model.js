@@ -6,7 +6,7 @@ const attrs = [
 'employee_id',
 'first_name',
 'last_name',
-'NIC',
+'nic',
 'addr_house_no',
 'addr_line_1',
 'addr_line_2',

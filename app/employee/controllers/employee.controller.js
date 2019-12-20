@@ -8,6 +8,7 @@ var _job_title_model = require('../../models/models/job_title_model');
 var _employment_status_model = require('../../models/models/employment_status_model');
 var _pay_grade_model = require('../../models/models/pay_grade_model');
 var _department_model = require('../../models/models/department_model');
+const db_service = require('../../db/db_service');
 const { employee_search_by_id_validation } = require('../validation');
 const { clean_object } = require("../../helpers/h");
 
@@ -30,19 +31,18 @@ const search_by_id = (req, res, emp_id) => {
         .then((employee) => {
             if (employee) {
                 employee = clean_object(employee);
-                return employee;
+                return {employee : employee};
             } else {
                 return res.status(400).json({ error: 'could not find employee' });
             }
         })
         .then(async (employee) => {
             var employee_contact_model = new _employee_contact_model();
-            var contacts = await employee_contact_model.find_by_employee_id(employee.employee_id)
+            var contacts = await employee_contact_model.find_by_employee_id(employee.employee.employee_id)
             if (contacts) {
                 for (let index = 0; index < contacts.length; index++) {
-                    contacts[index] = contacts[index].contact_no;
-                   
-
+                    contacts[index] = clean_object(contacts[index]);
+                    delete contacts[index].employee_id;
                 }
                 employee.contact_no = contacts;
             } else {
@@ -53,12 +53,12 @@ const search_by_id = (req, res, emp_id) => {
         })
         .then(async (employee) => {
             var employee_email_model = new _employee_email_model();
-            var emails = await employee_email_model.find_by_employee_id(employee.employee_id)
+            var emails = await employee_email_model.find_by_employee_id(employee.employee.employee_id)
 
             if (emails) {
                 for (let index = 0; index < emails.length; index++) {
-                    emails[index] = emails[index].email;
-
+                    emails[index] = clean_object(emails[index]);
+                    delete emails[index].employee_id;
                 }
                 employee.email = emails;
             } else {
@@ -69,7 +69,7 @@ const search_by_id = (req, res, emp_id) => {
         })
         .then(async (employee) => {
             var employee_custom_model = new _employee_custom_model();
-            var custom = await employee_custom_model.find_by_employee_id(employee.employee_id)
+            var custom = await employee_custom_model.find_by_employee_id(employee.employee.employee_id)
 
             if (custom) {
                 for (let index = 0; index < custom.length; index++) {
@@ -85,13 +85,12 @@ const search_by_id = (req, res, emp_id) => {
         })
         .then(async (employee) => {
             var dependent_model = new _dependent_model();
-            var dependents = await dependent_model.find_by_employee_id(employee.employee_id)
+            var dependents = await dependent_model.find_by_employee_id(employee.employee.employee_id)
 
             if (dependents) {
                 for (let index = 0; index < dependents.length; index++) {
                     dependents[index] = clean_object(dependents[index]);
                     delete dependents[index].employee_id
-
                 }
                 employee.dependents = dependents;
             } else {
@@ -102,7 +101,7 @@ const search_by_id = (req, res, emp_id) => {
         })
         .then(async (employee) => {
             var emergency_contact_model = new _emergency_contact_model();
-            var emergency_contacts = await emergency_contact_model.find_by_employee_id(employee.employee_id)
+            var emergency_contacts = await emergency_contact_model.find_by_employee_id(employee.employee.employee_id)
 
             if (emergency_contacts) {
                 for (let index = 0; index < emergency_contacts.length; index++) {
@@ -202,12 +201,52 @@ module.exports.form_attributes = (req,res)=>{
 }
 
 module.exports.add = (req,res) => {
-    var employee_model = new employee_model(req.body);
-    var employee_contact_model = new employee_contact_model();
-    var employee_email_model = new employee_email_model();
-    var emergency_contact_model = new emergency_contact_model();
-    var dependent_model = new dependent_model();
-    var employee_custom_model = new employee_custom_model();
+    //set employee_id
+    emp_id = req.body.employee.employee_id;
+
+    var models = [];
+
+    req.body.employee.employee_id = emp_id
+    models.push(new _employee_model(req.body.employee));
+
+    req.body.contact_no.forEach((contact_no) => {
+        contact_no.employee_id = emp_id;
+        models.push(new _employee_contact_model(contact_no));
+    });
+
+    req.body.email.forEach((email) => {
+        email.employee_id = emp_id;
+        models.push(new _employee_email_model(email));
+    });
+
+    req.body.custom.forEach((custom) => {
+        custom.employee_id = emp_id;
+        models.push(new _employee_custom_model(custom));
+    });
+
+    req.body.dependents.forEach((dependant) => {
+        dependant.employee_id = emp_id;
+        models.push(new _dependent_model(dependant));
+    });
+
+    req.body.emergency_contacts.forEach((emergency_contact) => {
+        emergency_contact.employee_id = emp_id;
+        models.push(new _emergency_contact_model(emergency_contact));
+    });
+
+    models.forEach((model) => {
+        console.log(model);
+    })
+
+    db_service.transaction_insert(models)
+    .then((result) => {
+        if(result){
+            return res.status(200).json(result);
+        }
+    })
+    .catch((err) => {
+        res.status(500).json({error : err.message})
+    });
 }
 
 
