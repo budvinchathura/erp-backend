@@ -1,12 +1,12 @@
 var mysql = require('mysql');
-var sql="";
+var sql = "";
 
 const db_options = {
-    host:'localhost',
-    user:'root',
-    password:'',
-    database:'erp',
-    multipleStatements:true
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 'erp',
+    multipleStatements: true
 }
 
 // const db_options = {
@@ -26,79 +26,79 @@ const db_options = {
 var con = mysql.createConnection(db_options);
 
 
-module.exports.find = function find(tables,params,cb){
+module.exports.find = function find(tables, params, cb) {
     sql = 'SELECT ';
-    if(params.columns && params.columns.length>0){
+    if (params.columns && params.columns.length > 0) {
         sql = sql.concat(' ?? ');
-        var columns = params.columns && params.columns.length >0 ? [params.columns]:[[]];
-        sql = mysql.format(sql,columns);
-    }else{
+        var columns = params.columns && params.columns.length > 0 ? [params.columns] : [[]];
+        sql = mysql.format(sql, columns);
+    } else {
         sql = sql.concat(' * ');
     }
-    
+
     sql = sql.concat(' FROM ?? ');
-    sql = mysql.format(sql,[tables]);
+    sql = mysql.format(sql, [tables]);
     var conditions = '';
-    if(params.conditions && params.conditions.length>0){
+    if (params.conditions && params.conditions.length > 0) {
         conditions = conditions.concat(' WHERE ')
         params.conditions.forEach(condition => {
-            conditions = conditions.concat(condition,' AND ')
+            conditions = conditions.concat(condition, ' AND ')
         });
-        conditions = conditions.endsWith('AND ')?conditions.slice(0,-4):conditions
+        conditions = conditions.endsWith('AND ') ? conditions.slice(0, -4) : conditions
     }
     sql = sql.concat(conditions);
     console.log(sql);
-    con.query(sql,cb);
+    con.query(sql, cb);
 }
 
-module.exports.insert = function insert(table,data,cb){
+module.exports.insert = function insert(table, data, cb) {
     sql = 'INSERT INTO ';
     sql = sql.concat(mysql.escapeId(table));
     sql = sql.concat(' SET ? ');
-    sql = mysql.format(sql,data);
+    sql = mysql.format(sql, data);
     console.log(sql);
-    con.query(sql,cb);
+    con.query(sql, cb);
 }
 
-module.exports.bulk_insert = function insert(table,columns,data,cb){
+module.exports.bulk_insert = function insert(table, columns, data, cb) {
     sql = 'INSERT INTO ';
     sql = sql.concat(mysql.escapeId(table));
     sql = sql.concat(' ( ?? ) ');
-    sql = mysql.format(sql,[columns]);
+    sql = mysql.format(sql, [columns]);
     sql = sql.concat(' VALUES ?');
-    sql = mysql.format(sql,[data]);
+    sql = mysql.format(sql, [data]);
     console.log(sql);
-    con.query(sql,cb);
+    con.query(sql, cb);
 }
 
-module.exports.update = function update(table,params,data,cb){
+module.exports.update = function update(table, params, data, cb) {
     sql = 'UPDATE ';
     sql = sql.concat(mysql.escapeId(table));
     sql = sql.concat(' SET ? ');
-    sql = mysql.format(sql,data);
-    var conditions='';
-    if(params.conditions && params.conditions.length>0){
+    sql = mysql.format(sql, data);
+    var conditions = '';
+    if (params.conditions && params.conditions.length > 0) {
         conditions = ' WHERE ';
-        params.conditions.forEach(condition=>{
-            conditions = conditions.concat(condition,' AND ');
+        params.conditions.forEach(condition => {
+            conditions = conditions.concat(condition, ' AND ');
         });
-        conditions = conditions.slice(0,-4);
+        conditions = conditions.slice(0, -4);
     }
     sql = sql.concat(conditions);
     console.log(sql);
-    con.query(sql,cb);
-    
+    con.query(sql, cb);
+
 }
 
-module.exports.delete = function del(table,params,cb){
+module.exports.delete = function del(table, params, cb) {
     sql = 'DELETE FROM ';
     sql = sql.concat(mysql.escapeId(table));
-    if(params.conditions && params.conditions.length > 0){
+    if (params.conditions && params.conditions.length > 0) {
         conditions = ' WHERE ';
-        params.conditions.forEach(condition=>{
-            conditions = conditions.concat(condition,' AND ');
+        params.conditions.forEach(condition => {
+            conditions = conditions.concat(condition, ' AND ');
         });
-        conditions = conditions.slice(0,-4);
+        conditions = conditions.slice(0, -4);
     } else {
         return console.log("no conditions given");    //TODO handle this properly
     }
@@ -108,15 +108,15 @@ module.exports.delete = function del(table,params,cb){
 }
 
 //params should be given in order
-module.exports.call_proc = function call(procedure, params, cb){
+module.exports.call_proc = function call(procedure, params, cb) {
     sql = 'CALL ';
     sql = sql.concat(mysql.escapeId(procedure));
-    var conditions = '('; 
-    if(params && params.length > 0){
+    var conditions = '(';
+    if (params && params.length > 0) {
         params.forEach((condition) => {
             conditions = conditions.concat(condition, ',');
         })
-        conditions = conditions.slice(0,-1)
+        conditions = conditions.slice(0, -1)
     }
     conditions = conditions.concat(')');
     sql = sql.concat(conditions);
@@ -124,7 +124,32 @@ module.exports.call_proc = function call(procedure, params, cb){
     con.query(sql, cb);
 }
 
-module.exports.exec_query = function exec_query(sql, cb){
+module.exports.exec_transaction_query = function exec_transaction_query(sql, cb) {
     console.log(sql);
-    con.query(sql, cb);
+
+    con.beginTransaction(function (err) {
+        if (err) { cb(err) }
+        else{
+            con.query(sql, function (err, result) {
+                if (err) {
+                    con.rollback(function () {
+                        cb(err);
+                    });
+                }
+                else{
+                    con.commit(function (err) {
+                        if (err) {
+                            con.rollback(function () {
+                                cb(err)
+                            });
+                        }else{
+                            cb();
+                        }                       
+                        
+                    });
+                }
+                
+            });
+        }
+    });
 }

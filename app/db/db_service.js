@@ -3,7 +3,7 @@ var db = require('./db');
 var sql="";
 
 module.exports.transaction_insert = function transaction_insert(models){
-    sql = "START TRANSACTION; ";
+    sql = "";
     models.forEach((model) => {
         var sub_sql = 'INSERT INTO ';
         sub_sql = sub_sql.concat(mysql.escapeId(model.table));
@@ -12,7 +12,6 @@ module.exports.transaction_insert = function transaction_insert(models){
         sub_sql = sub_sql.concat(' ; ');
         sql = sql.concat(sub_sql);
     });
-    sql = sql.concat('COMMIT ;');
 
     return new Promise((resolve, reject) => {
         const cb = function(error,results,fields){
@@ -25,7 +24,7 @@ module.exports.transaction_insert = function transaction_insert(models){
             }            
         }
 
-        db.exec_query(sql,cb);
+        db.exec_transaction_query(sql,cb);
     });
 
 }
