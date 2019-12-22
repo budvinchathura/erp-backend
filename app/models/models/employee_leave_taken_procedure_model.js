@@ -11,7 +11,7 @@ employee_leave_taken_procedure_model.prototype = Object.create(procedure_model.p
 
 employee_leave_taken_procedure_model.prototype._view = function(emp_id){
     var params = [];
-    params.push(mysql.escape(emp_id));
+    params.push(emp_id);
     return this.view(params);
 }
 

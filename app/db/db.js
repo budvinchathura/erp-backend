@@ -111,15 +111,15 @@ module.exports.delete = function del(table, params, cb) {
 module.exports.call_proc = function call(procedure, params, cb) {
     sql = 'CALL ';
     sql = sql.concat(mysql.escapeId(procedure));
-    var conditions = '(';
+    var params_string = '(';
     if (params && params.length > 0) {
-        params.forEach((condition) => {
-            conditions = conditions.concat(condition, ',');
+        params.forEach((param) => {
+            params_string = params_string.concat(mysql.escape(param), ',');
         })
-        conditions = conditions.slice(0, -1)
+        params_string = params_string.slice(0, -1);
     }
-    conditions = conditions.concat(')');
-    sql = sql.concat(conditions);
+    params_string = params_string.concat(')');
+    sql = sql.concat(params_string);
     console.log(sql);
     con.query(sql, cb);
 }
