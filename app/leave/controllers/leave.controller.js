@@ -1,6 +1,7 @@
 var _leave_limit_model = require('../../models/models/leave_limit_model');
 var _leave_model = require('../../models/models/leave_model');
 var _emp_leave_taken_procedure_model = require ('../../models/models/employee_leave_taken_procedure_model');
+var _my_leave_types_procedure_model = require ('../../models/models/my_leave_types_procedure_model');
 
 const { clean_object } = require("../../helpers/h");
 const {leave_limit_add_update_validation,leave_add_validation} = require("../validation");
@@ -117,4 +118,22 @@ module.exports.history = (req,res)=>{
     }).catch((error) => {
         return res.status(500).json({ error: error.message });
     });
+}
+
+
+module.exports.my_leave_types = (req, res) => {
+    var my_leave_types_procedure_model = new _my_leave_types_procedure_model();
+    my_leave_types_procedure_model._view(req.user.employee_id)
+        .then((leave_types) => {
+            if (leave_types) {
+                for (let index = 0; index < leave_types.length; index++) {
+                    leave_types[index] = leave_types[index].leave_type;
+                    
+                }
+                res.status(200).json(leave_types);
+            }
+        })
+        .catch((error) => {
+            return res.status(500).json({ error: error.message });
+        })
 }

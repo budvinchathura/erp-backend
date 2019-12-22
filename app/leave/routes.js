@@ -8,6 +8,7 @@ router.patch('/limit', [valid_jwt_needed,minimum_access_level_required(['L1','L2
 router.put('/limit', [valid_jwt_needed,minimum_access_level_required(['L1','L2','L3'])],leave_controller.add_limit);
 router.get('/taken', [valid_jwt_needed,minimum_access_level_required(['L1','L2','L3'])], leave_controller.taken);
 router.post('/apply', [valid_jwt_needed,minimum_access_level_required(['L1','L2','L3'])], leave_controller.apply_leave);
+router.get('/my-types', [valid_jwt_needed,minimum_access_level_required(['L1','L2','L3'])], leave_controller.my_leave_types);
 router.get('/history', [valid_jwt_needed,minimum_access_level_required(['L1','L2','L3'])], leave_controller.history);
 
 module.exports = router;
