@@ -139,7 +139,7 @@ model.prototype.delete = function del(params){
             if (error){
                 reject(error);
             } else {
-                resolve(true);
+                resolve({affectedRows:results.affectedRows});
             }
         }
         db.delete(table,_params,cb);
@@ -169,7 +169,7 @@ model.prototype.bulk_insert = function bulk_insert(models) {
                 reject(error);
             } 
             else{
-                resolve(true) 
+                resolve({affectedRows:results.affectedRows}) 
             }            
         }
 

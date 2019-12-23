@@ -273,8 +273,8 @@ module.exports.update_basic_details = (req, res) => {
             return res.status(200).json(result);
         }
     })
-    .catch((error) => {
-        return res.status(500).json(error);
+    .catch((err) => {
+        return res.status(500).json({error : err.message});
     })
 }
 
@@ -284,7 +284,6 @@ module.exports.insert_contact_details = (req,res) => {
     //     "employee_id": "09929",
     //     "contact_no": [{"contact_no" : "1984038134"},{"contact_no" : "17167461"}]
     // }
-
     var models = []
 
     req.body.contact_no.forEach((contact_no) => {
@@ -301,4 +300,22 @@ module.exports.insert_contact_details = (req,res) => {
     .catch((err) => {
         res.status(500).json({error : err.message})
     });
+}
+
+module.exports.delete_contact_details = (req,res) => {
+    //expected body
+    // {
+    //     "employee_id": "09929",
+    //     "contact_no": "0112224448"
+    // }
+    var employee_contact_model = new _employee_contact_model(req.body);
+    employee_contact_model._delete()
+    .then((result) => {
+        if(result){
+            return res.status(200).json(result);
+        }
+    })
+    .catch((err) => {
+        return res.status(500).json({error : err.message});
+    })
 }
