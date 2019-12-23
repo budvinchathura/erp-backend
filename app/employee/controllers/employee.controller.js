@@ -234,10 +234,6 @@ module.exports.add = (req,res) => {
         models.push(new _emergency_contact_model(emergency_contact));
     });
 
-    models.forEach((model) => {
-        console.log(model);
-    })
-
     db_service.transaction_insert(models)
     .then((result) => {
         if(result){
@@ -280,4 +276,29 @@ module.exports.update_basic_details = (req, res) => {
     .catch((error) => {
         return res.status(500).json(error);
     })
+}
+
+module.exports.insert_contact_details = (req,res) => {
+    //expected body
+    // {
+    //     "employee_id": "09929",
+    //     "contact_no": [{"contact_no" : "1984038134"},{"contact_no" : "17167461"}]
+    // }
+
+    var models = []
+
+    req.body.contact_no.forEach((contact_no) => {
+        contact_no.employee_id = req.body.employee_id;
+        models.push(new _employee_contact_model(contact_no));
+    });
+
+    db_service.transaction_insert(models)
+    .then((result) => {
+        if(result){
+            return res.status(200).json(result);
+        }
+    })
+    .catch((err) => {
+        res.status(500).json({error : err.message})
+    });
 }

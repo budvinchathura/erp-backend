@@ -51,4 +51,6 @@ employee_model.prototype._update = function (employee_id){
     return this.update(params);
 }
 
+//TODO delete
+
 module.exports = employee_model;
