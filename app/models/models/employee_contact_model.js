@@ -30,6 +30,4 @@ employee_contact_model.prototype._delete = function(){
     return this.delete(params);
 }
 
-
-
 module.exports = employee_contact_model;

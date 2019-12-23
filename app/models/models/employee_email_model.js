@@ -23,6 +23,11 @@ employee_email_model.prototype.find_by_employee_id = function (employee_id){
     return this.find_all(params);
 }
 
-
+employee_email_model.prototype._delete = function(){
+    var params = [];
+    params.push(mysql.escapeId('employee_id').concat(' = ').concat(mysql.escape(this.employee_id)));
+    params.push(mysql.escapeId('email').concat(' = ').concat(mysql.escape(this.email)));
+    return this.delete(params);
+}
 
 module.exports = employee_email_model;

@@ -169,7 +169,7 @@ model.prototype.bulk_insert = function bulk_insert(models) {
                 reject(error);
             } 
             else{
-                resolve({affectedRows:results.affectedRows}) 
+                resolve(true) 
             }            
         }
 

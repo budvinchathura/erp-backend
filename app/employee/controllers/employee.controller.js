@@ -200,6 +200,9 @@ module.exports.form_attributes = (req,res)=>{
     });
 }
 
+
+//TODO validate everything beyond this
+
 module.exports.add = (req,res) => {
     //set employee_id
     emp_id = req.body.employee.employee_id;
@@ -310,6 +313,48 @@ module.exports.delete_contact_details = (req,res) => {
     // }
     var employee_contact_model = new _employee_contact_model(req.body);
     employee_contact_model._delete()
+    .then((result) => {
+        if(result){
+            return res.status(200).json(result);
+        }
+    })
+    .catch((err) => {
+        return res.status(500).json({error : err.message});
+    })
+}
+
+module.exports.insert_email = (req,res) => {
+    //expected body
+    // {
+    //     "employee_id": "09929",
+    //     "email": [{"email" : "th@gdg.com"},{"email" : "afa@rhh.com"}]
+    // }
+    var models = []
+
+    req.body.email.forEach((email) => {
+        email.employee_id = req.body.employee_id;
+        models.push(new _employee_email_model(email));
+    });
+
+    db_service.transaction_insert(models)
+    .then((result) => {
+        if(result){
+            return res.status(200).json(result);
+        }
+    })
+    .catch((err) => {
+        res.status(500).json({error : err.message})
+    });
+}
+
+module.exports.delete_email = (req,res) => {
+    //expected body
+    // {
+    //     "employee_id": "09929",
+    //     "email": "th@fagad.com"
+    // }
+    var employee_email_model = new _employee_email_model(req.body);
+    employee_email_model._delete()
     .then((result) => {
         if(result){
             return res.status(200).json(result);
