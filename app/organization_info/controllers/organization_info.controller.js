@@ -35,7 +35,6 @@ module.exports.insert = (req, res) => {
 
 module.exports.bulk_insert = (req, res) => {
     var models = [];
-    console.log(req.body.data);
     req.body.data.forEach(function(item, index){
         var organization_info_model = new _organization_info_model(item);
         models.push(organization_info_model);

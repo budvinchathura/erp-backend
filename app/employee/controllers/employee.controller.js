@@ -249,4 +249,35 @@ module.exports.add = (req,res) => {
     });
 }
 
+module.exports.update_basic_details = (req, res) => {
+    //expected body
+    // {
+    //     "employee_id": "09929",
+    //     "first_name": "Dwain",
+    //     "last_name": "Costa",
+    //     "nic": "114182682743",
+    //     "addr_house_no": "PO Box 5434",
+    //     "addr_line_1": "78th Floor",
+    //     "addr_line_2": "Whitmire",
+    //     "addr_city": "Reese",
+    //     "dob": "1951-06-03T18:30:00.000Z",
+    //     "marital_status": "Married",
+    //     "employment_status": "Contract-FT",
+    //     "active_status": 1,
+    //     "job_title": "Communication Analyst",
+    //     "dept_name": "Information Technology",
+    //     "pay_grade": "Grade-1",
+    //     "supervisor_id": "74078"
+    // }
 
+    var employee_model = new _employee_model(req.body);
+    employee_model._update(req.body.employee_id)
+    .then((result) => {
+        if(result){
+            return res.status(200).json(result);
+        }
+    })
+    .catch((error) => {
+        return res.status(500).json(error);
+    })
+}
