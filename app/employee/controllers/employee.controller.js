@@ -312,6 +312,8 @@ module.exports.update_contact_details = (req,res) => {
     //     "previous_contact_no" : "1214342"
     //     "contact_no": "0112224448"
     // }
+
+    //TODO handle duplicate entries
     var employee_contact_model = new _employee_contact_model(req.body);
     employee_contact_model._update(req.body.previous_contact_no)
     .then((result) => {
@@ -364,6 +366,27 @@ module.exports.insert_email = (req,res) => {
     .catch((err) => {
         res.status(500).json({error : err.message})
     });
+}
+
+module.exports.update_email = (req,res) => {
+    //expected body
+    // {
+    //     "employee_id": "09929",
+    //     "previous_email" : "1214342"
+    //     "email": "0112224448"
+    // }
+
+    //TODO handle duplicate entries
+    var employee_email_model = new _employee_email_model(req.body);
+    employee_email_model._update(req.body.previous_email)
+    .then((result) => {
+        if(result){
+            return res.status(200).json(result);
+        }
+    })
+    .catch((err) => {
+        return res.status(500).json({error : err.message});
+    })
 }
 
 module.exports.delete_email = (req,res) => {

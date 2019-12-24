@@ -30,4 +30,11 @@ employee_email_model.prototype._delete = function(){
     return this.delete(params);
 }
 
+employee_email_model.prototype._update = function (previous_email){
+    var params = [];
+    params.push(mysql.escapeId('employee_id').concat(' = ').concat(mysql.escape(this.employee_id)));
+    params.push(mysql.escapeId('email').concat(' = ').concat(mysql.escape(previous_email)));
+    return this.update(params);
+}
+
 module.exports = employee_email_model;
