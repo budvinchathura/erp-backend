@@ -305,6 +305,25 @@ module.exports.insert_contact_details = (req,res) => {
     });
 }
 
+module.exports.update_contact_details = (req,res) => {
+    //expected body
+    // {
+    //     "employee_id": "09929",
+    //     "previous_contact_no" : "1214342"
+    //     "contact_no": "0112224448"
+    // }
+    var employee_contact_model = new _employee_contact_model(req.body);
+    employee_contact_model._update(req.body.previous_contact_no)
+    .then((result) => {
+        if(result){
+            return res.status(200).json(result);
+        }
+    })
+    .catch((err) => {
+        return res.status(500).json({error : err.message});
+    })
+}
+
 module.exports.delete_contact_details = (req,res) => {
     //expected body
     // {
@@ -364,3 +383,4 @@ module.exports.delete_email = (req,res) => {
         return res.status(500).json({error : err.message});
     })
 }
+

@@ -9,6 +9,7 @@ router.post('/view',[valid_jwt_needed,minimum_access_level_required(['L1','L2','
 router.post('/add',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3']),employee_controller.add]);
 router.patch('/basic',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3']),employee_controller.update_basic_details]);
 router.post('/contact',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3']),employee_controller.insert_contact_details]);
+router.patch('/contact',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3']),employee_controller.update_contact_details]);
 router.delete('/contact',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3']),employee_controller.delete_contact_details]);
 router.post('/email',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3']),employee_controller.insert_email]);
 router.delete('/email',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3']),employee_controller.delete_email]);

@@ -30,4 +30,11 @@ employee_contact_model.prototype._delete = function(){
     return this.delete(params);
 }
 
+employee_contact_model.prototype._update = function (previous_contact_no){
+    var params = [];
+    params.push(mysql.escapeId('employee_id').concat(' = ').concat(mysql.escape(this.employee_id)));
+    params.push(mysql.escapeId('contact_no').concat(' = ').concat(mysql.escape(previous_contact_no)));
+    return this.update(params);
+}
+
 module.exports = employee_contact_model;
