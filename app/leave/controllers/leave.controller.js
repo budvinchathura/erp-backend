@@ -1,10 +1,11 @@
 var _leave_limit_model = require('../../models/models/leave_limit_model');
 var _leave_model = require('../../models/models/leave_model');
+var _leave_type_model = require('../../models/models/leave_type_model');
 var _emp_leave_taken_procedure_model = require ('../../models/models/employee_leave_taken_procedure_model');
 var _my_leave_types_procedure_model = require ('../../models/models/my_leave_types_procedure_model');
 
 const { clean_object } = require("../../helpers/h");
-const {leave_limit_add_update_validation,leave_add_validation} = require("../validation");
+const {leave_limit_add_update_validation,leave_add_validation,leave_type_add_validation} = require("../validation");
 
 
 module.exports.view_limits = (req, res) => {
@@ -136,4 +137,40 @@ module.exports.my_leave_types = (req, res) => {
         .catch((error) => {
             return res.status(500).json({ error: error.message });
         })
+}
+
+
+
+module.exports.view_leave_types = (req, res) => {
+    var leave_type_model = new _leave_type_model();
+    leave_type_model._find_all()
+        .then((leave_types) => {
+            if(leave_types){
+                for (let index = 0; index < leave_types.length; index++) {
+                    leave_types[index] = leave_types[index].leave_type;
+                    
+                }
+                res.status(200).json(leave_types);
+            } else { 
+                res.status(200).json([]);
+            }   
+        })
+        .catch((err) => {
+            return res.status(500).json({error:err.message});
+        })
+}
+
+module.exports.add_leave_type = (req,res)=>{
+    const { error } = leave_type_add_validation(req.body);
+    if (error) {
+        return res.status(400).json({ error: error.details[0].message });
+    }else{
+        var leave_type_model = new _leave_type_model(req.body);
+        leave_type_model.insert()
+        .then((result) => {
+            return res.status(200).json({});
+        }).catch((err) => {
+            return res.status(500).json({ error: err.message });
+        });
+    }
 }

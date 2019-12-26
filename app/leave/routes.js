@@ -10,5 +10,7 @@ router.get('/taken', [valid_jwt_needed,minimum_access_level_required(['L1','L2',
 router.post('/apply', [valid_jwt_needed,minimum_access_level_required(['L1','L2','L3'])], leave_controller.apply_leave);
 router.get('/my-types', [valid_jwt_needed,minimum_access_level_required(['L1','L2','L3'])], leave_controller.my_leave_types);
 router.get('/history', [valid_jwt_needed,minimum_access_level_required(['L1','L2','L3'])], leave_controller.history);
+router.get('/type', [valid_jwt_needed,minimum_access_level_required(['L1','L2','L3'])], leave_controller.view_leave_types);
+router.put('/type', [valid_jwt_needed,minimum_access_level_required(['L1','L2','L3'])], leave_controller.add_leave_type);
 
 module.exports = router;

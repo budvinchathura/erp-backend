@@ -21,6 +21,14 @@ module.exports.leave_add_validation = (data)=>{
     return schema.validate(data);
 }
 
+module.exports.leave_type_add_validation = (data)=>{
+    const schema = joi.object({        
+        leave_type: joi.string().required()
+    })
+
+    return schema.validate(data);
+}
+
 
 
 // module.exports.leave_limit_add_update_validation = leave_limit_add_update_validation;
