@@ -10,6 +10,7 @@ const pay_grade_route = require('./pay_grade/routes');
 const department_route = require('./department/routes');
 const leave_route = require('./leave/routes');
 const custom_attribute_route = require('./custom_attributes/routes');
+const supervisor_route = require('./supervisor/routes');
 var cors = require('cors')
 
 var app = express();
@@ -36,6 +37,7 @@ app.use('/pay-grade',pay_grade_route);
 app.use('/department',department_route);
 app.use('/leave',leave_route);
 app.use('/custom',custom_attribute_route);
+app.use('/supervisor',supervisor_route);
 app.use(error_route);
 
 module.exports = app;

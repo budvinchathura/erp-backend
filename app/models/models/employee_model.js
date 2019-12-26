@@ -51,6 +51,12 @@ employee_model.prototype._update = function (employee_id){
     return this.update(params);
 }
 
+employee_model.prototype.find_subordinates = function(supervisor_id){
+    var params = [];
+    params.push(mysql.escapeId('supervisor_id').concat(' = ').concat(mysql.escape(supervisor_id)));
+    return this.find_all(params);
+}
+
 //TODO delete
 
 module.exports = employee_model;
