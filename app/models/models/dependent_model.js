@@ -46,7 +46,7 @@ dependent_model.prototype._delete = function(){
 dependent_model.prototype._update = function (previous_nic){
     var params = [];
     params.push(mysql.escapeId('employee_id').concat(' = ').concat(mysql.escape(this.employee_id)));
-    params.push(mysql.escapeId('email').concat(' = ').concat(mysql.escape(previous_nic)));
+    params.push(mysql.escapeId('nic').concat(' = ').concat(mysql.escape(previous_nic)));
     return this.update(params);
 }
 

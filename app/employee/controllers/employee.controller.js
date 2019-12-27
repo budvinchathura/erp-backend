@@ -496,7 +496,6 @@ module.exports.delete_dependent = (req,res) => {
     .catch((err) => {
         return res.status(500).json({error : err.message});
     })
-
 }
 
 module.exports.insert_emergency_contact = (req,res) => {
@@ -519,10 +518,50 @@ module.exports.insert_emergency_contact = (req,res) => {
 }
 
 module.exports.update_emergency_contact = (req,res) => {
-
+    // expected body
+    // {
+    //     "old" : {
+    //         "nic" : "",
+    //         "employee_id" : "",
+    //         "name" : "",    
+    //         "contact_no" : ""
+    //         }
+    //     "new" : {
+    //         "nic" : "",
+    //         "employee_id" : "",
+    //         "name" : "",    
+    //         "contact_no" : ""
+    //         }
+    // }
+    var emergency_contact_model = new _emergency_contact_model(req.body.new);
+    emergency_contact_model._update(req.body.old.nic)
+    .then((result) => {
+        if(result){
+            return res.status(200).json(result);
+        }
+    })
+    .catch((err) => {
+        return res.status(500).json({error : err.message});
+    })
 }
 
 module.exports.delete_emergency_contact = (req,res) => {
-
+    // expected body
+    // {
+    //     "nic" : "",
+    //     "employee_id" : "",
+    //     "name" : "",    
+    //     "contact_no" : ""
+    // }
+    var emergency_contact_model = new _emergency_contact_model(req.body);
+    emergency_contact_model._delete()
+    .then((result) => {
+        if(result){
+            return res.status(200).json(result);
+        }
+    })
+    .catch((err) => {
+        return res.status(500).json({error : err.message});
+    })
 }
 

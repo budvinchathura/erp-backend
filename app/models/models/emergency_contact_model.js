@@ -29,6 +29,19 @@ emergency_contact_model.prototype.find_by_employee_id = function (employee_id) {
     return this.find_all(params);
 }
 
+emergency_contact_model.prototype._delete = function(){
+    var params = [];
+    params.push(mysql.escapeId('employee_id').concat(' = ').concat(mysql.escape(this.employee_id)));
+    params.push(mysql.escapeId('nic').concat(' = ').concat(mysql.escape(this.nic)));
+    return this.delete(params);
+}
+
+dependent_model.prototype._update = function (previous_nic){
+    var params = [];
+    params.push(mysql.escapeId('employee_id').concat(' = ').concat(mysql.escape(this.employee_id)));
+    params.push(mysql.escapeId('nic').concat(' = ').concat(mysql.escape(previous_nic)));
+    return this.update(params);
+}
 
 
 module.exports = emergency_contact_model;
