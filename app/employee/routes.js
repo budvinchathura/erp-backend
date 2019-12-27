@@ -6,6 +6,7 @@ router.post('/view',[valid_jwt_needed,minimum_access_level_required(['L1','L2','
 
 //TODO change access levels
 //TODO refactor request types
+//TODO validate requests
 router.post('/add',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3']),employee_controller.add]);
 router.patch('/basic',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3']),employee_controller.update_basic_details]);
 router.post('/contact',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3']),employee_controller.insert_contact_details]);

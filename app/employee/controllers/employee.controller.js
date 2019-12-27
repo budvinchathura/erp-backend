@@ -284,13 +284,12 @@ module.exports.update_basic_details = (req, res) => {
 module.exports.insert_contact_details = (req,res) => {
     //expected body
     // {
-    //     "employee_id": "09929",
-    //     "contact_no": [{"contact_no" : "1984038134"},{"contact_no" : "17167461"}]
+    //     "contact_no": [{"employee_id": "09929", "contact_no" : "1984038134"},{"employee_id": "09929","contact_no" : "17167461"}]
     // }
+
     var models = []
 
     req.body.contact_no.forEach((contact_no) => {
-        contact_no.employee_id = req.body.employee_id;
         models.push(new _employee_contact_model(contact_no));
     });
 
@@ -308,14 +307,13 @@ module.exports.insert_contact_details = (req,res) => {
 module.exports.update_contact_details = (req,res) => {
     //expected body
     // {
-    //     "employee_id": "09929",
-    //     "previous_contact_no" : "1214342"
-    //     "contact_no": "0112224448"
+    //     "old" : {"employee_id" : "00001","contact_no" : "12418218"}
+    //     "new" : {"employee_id" : "00001","contact_no" : "12413453"}
     // }
 
     //TODO handle duplicate entries
-    var employee_contact_model = new _employee_contact_model(req.body);
-    employee_contact_model._update(req.body.previous_contact_no)
+    var employee_contact_model = new _employee_contact_model(req.body.new);
+    employee_contact_model._update(req.body.old.contact_no)
     .then((result) => {
         if(result){
             return res.status(200).json(result);
@@ -345,15 +343,13 @@ module.exports.delete_contact_details = (req,res) => {
 }
 
 module.exports.insert_email = (req,res) => {
-    //expected body
+      //expected body
     // {
-    //     "employee_id": "09929",
-    //     "email": [{"email" : "th@gdg.com"},{"email" : "afa@rhh.com"}]
+    //     "email": [{"employee_id": "09929", "email" : "1984038134"},{"employee_id": "09929","email" : "17167461"}]
     // }
     var models = []
 
     req.body.email.forEach((email) => {
-        email.employee_id = req.body.employee_id;
         models.push(new _employee_email_model(email));
     });
 
@@ -371,14 +367,13 @@ module.exports.insert_email = (req,res) => {
 module.exports.update_email = (req,res) => {
     //expected body
     // {
-    //     "employee_id": "09929",
-    //     "previous_email" : "1214342"
-    //     "email": "0112224448"
+    //     "old" : {"employee_id" : "00001","email" : "foo@gmail.com"}
+    //     "new" : {"employee_id" : "00001","email" : "bar@gmail.com"}
     // }
 
     //TODO handle duplicate entries
-    var employee_email_model = new _employee_email_model(req.body);
-    employee_email_model._update(req.body.previous_email)
+    var employee_email_model = new _employee_email_model(req.body.new);
+    employee_email_model._update(req.body.old.email)
     .then((result) => {
         if(result){
             return res.status(200).json(result);
