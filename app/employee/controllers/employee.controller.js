@@ -227,9 +227,9 @@ module.exports.add = (req,res) => {
         models.push(new _employee_custom_model(custom));
     });
 
-    req.body.dependents.forEach((dependant) => {
-        dependant.employee_id = emp_id;
-        models.push(new _dependent_model(dependant));
+    req.body.dependents.forEach((dependent) => {
+        dependent.employee_id = emp_id;
+        models.push(new _dependent_model(dependent));
     });
 
     req.body.emergency_contacts.forEach((emergency_contact) => {
@@ -400,5 +400,129 @@ module.exports.delete_email = (req,res) => {
     .catch((err) => {
         return res.status(500).json({error : err.message});
     })
+}
+
+module.exports.insert_dependent = (req,res) => {
+    // expected body
+    // {
+    //     "nic" : "",
+    //     "employee_id" : "",
+    //     "first_name" : "",
+    //     "last_name" : "",
+    //     "relationship" : "",
+    //     "addr_house_no" : "",
+    //     "addr_line_1" : "",
+    //     "addr_line_2" : "",
+    //     "addr_city" : "",
+    //     "contact_no" : "",
+    //     "email" : ""
+    // }
+    new _department_model(req.body).insert()
+    .then((result) => {
+        if(result){
+            return res.status(200).json(result);
+        }
+    })
+    .catch((err) => {
+        return res.status(500).json({error : err.message});
+    })
+}
+
+module.exports.update_dependent = (req,res) => {
+    // expected body
+    // {
+    //     "old" : {
+    //         "nic" : "",
+    //         "employee_id" : "",
+    //         "first_name" : "",
+    //         "last_name" : "",
+    //         "relationship" : "",
+    //         "addr_house_no" : "",
+    //         "addr_line_1" : "",
+    //         "addr_line_2" : "",
+    //         "addr_city" : "",
+    //         "contact_no" : "",
+    //         "email" : ""
+    //     }
+    //     "new" : {
+    //         "nic" : "",
+    //         "employee_id" : "",
+    //         "first_name" : "",
+    //         "last_name" : "",
+    //         "relationship" : "",
+    //         "addr_house_no" : "",
+    //         "addr_line_1" : "",
+    //         "addr_line_2" : "",
+    //         "addr_city" : "",
+    //         "contact_no" : "",
+    //         "email" : ""
+    //     }
+    // }
+    var dependent_model = new _dependent_model(req.body.new);
+    dependent_model._update(req.body.old.nic)
+    .then((result) => {
+        if(result){
+            return res.status(200).json(result);
+        }
+    })
+    .catch((err) => {
+        return res.status(500).json({error : err.message});
+    })
+
+}
+
+module.exports.delete_dependent = (req,res) => {
+    // expected body
+    // {
+    //     "nic" : "",
+    //     "employee_id" : "",
+    //     "first_name" : "",
+    //     "last_name" : "",
+    //     "relationship" : "",
+    //     "addr_house_no" : "",
+    //     "addr_line_1" : "",
+    //     "addr_line_2" : "",
+    //     "addr_city" : "",
+    //     "contact_no" : "",
+    //     "email" : ""
+    // }
+    var dependent_model = new _dependent_model(req.body);
+    dependent_model._delete()
+    .then((result) => {
+        if(result){
+            return res.status(200).json(result);
+        }
+    })
+    .catch((err) => {
+        return res.status(500).json({error : err.message});
+    })
+
+}
+
+module.exports.insert_emergency_contact = (req,res) => {
+    // expected body
+    // {
+    //     "nic" : "",
+    //     "employee_id" : "",
+    //     "name" : "",    
+    //     "contact_no" : ""
+    // }
+    new _emergency_contact_model(req.body).insert()
+    .then((result) => {
+        if(result){
+            return res.status(200).json(result);
+        }
+    })
+    .catch((err) => {
+        return res.status(500).json({error : err.message});
+    })
+}
+
+module.exports.update_emergency_contact = (req,res) => {
+
+}
+
+module.exports.delete_emergency_contact = (req,res) => {
+
 }
 

@@ -15,6 +15,12 @@ router.delete('/contact',[valid_jwt_needed,minimum_access_level_required(['L1','
 router.post('/email',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3']),employee_controller.insert_email]);
 router.patch('/email',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3']),employee_controller.update_email]);
 router.delete('/email',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3']),employee_controller.delete_email]);
+router.post('/dependent',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3']),employee_controller.insert_dependent]);
+router.patch('/dependent',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3']),employee_controller.update_dependent]);
+router.delete('/dependent',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3']),employee_controller.delete_dependent]);
+router.post('/emergency',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3']),employee_controller.insert_emergency_contact]);
+router.patch('/emergency',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3']),employee_controller.update_emergency_contact]);
+router.delete('/emergency',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3']),employee_controller.delete_emergency_contact]);
 
 router.get('/profile',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3']),employee_controller.profile]);
 router.get('/hr', [valid_jwt_needed,minimum_access_level_required(['Admin','L3','L1'])], employee_controller.view_hr);
