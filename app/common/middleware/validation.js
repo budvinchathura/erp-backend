@@ -20,7 +20,7 @@ module.exports.before_update_employee = function(req, res, next){
         new:joi.object({
             employee_id: joi.string().max(20).required(),
          }).unknown(true).required(),
-    })
+    }).unknown(true)
     const { error } = schema.validate(req.body);
     if (error) {
         return res.status(400).json({error:error.details[0].message});
