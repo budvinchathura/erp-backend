@@ -10,7 +10,7 @@ var _pay_grade_model = require('../../models/models/pay_grade_model');
 var _department_model = require('../../models/models/department_model');
 const db_service = require('../../db/db_service');
 const { employee_search_by_id_validation } = require('../validation');
-const { clean_object } = require("../../helpers/h");
+const { clean_object,fix_date } = require("../../helpers/h");
 
 module.exports.search_by_id = (req, res) => {
     const { error } = employee_search_by_id_validation(req.body);
@@ -31,6 +31,7 @@ const search_by_id = (req, res, emp_id) => {
         .then((employee) => {
             if (employee) {
                 employee = clean_object(employee);
+                employee.dob = fix_date(employee.dob);
                 return {employee : employee};
             } else {
                 return res.status(400).json({ error: 'could not find employee' });
