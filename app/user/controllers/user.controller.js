@@ -16,7 +16,6 @@ module.exports.login = (req, res) => {
         return res.status(400).json({error:error.details[0].message});
     }
 
-
     var user_access_model = new _user_access_model();
     user_access_model.find_by_username(req.body.username)
         .then(async (user) => {
@@ -78,5 +77,4 @@ module.exports.register = (req, res) => {
     // .catch((error)=>{
     //     return res.status(500).send('server error');
     // })
-
 }

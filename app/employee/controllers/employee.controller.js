@@ -251,26 +251,28 @@ module.exports.add = (req,res) => {
 module.exports.update_basic_details = (req, res) => {
     //expected body
     // {
-    //     "employee_id": "09929",
-    //     "first_name": "Dwain",
-    //     "last_name": "Costa",
-    //     "nic": "114182682743",
-    //     "addr_house_no": "PO Box 5434",
-    //     "addr_line_1": "78th Floor",
-    //     "addr_line_2": "Whitmire",
-    //     "addr_city": "Reese",
-    //     "dob": "1951-06-03T18:30:00.000Z",
-    //     "marital_status": "Married",
-    //     "employment_status": "Contract-FT",
-    //     "active_status": 1,
-    //     "job_title": "Communication Analyst",
-    //     "dept_name": "Information Technology",
-    //     "pay_grade": "Grade-1",
-    //     "supervisor_id": "74078"
+    // "new" : {
+    //         "employee_id": "09929",
+    //         "first_name": "Dwain",
+    //         "last_name": "Costa",
+    //         "nic": "114182682743",
+    //         "addr_house_no": "PO Box 5434",
+    //         "addr_line_1": "78th Floor",
+    //         "addr_line_2": "Whitmire",
+    //         "addr_city": "Reese",
+    //         "dob": "1951-06-03T18:30:00.000Z",
+    //         "marital_status": "Married",
+    //         "employment_status": "Contract-FT",
+    //         "active_status": 1,
+    //         "job_title": "Communication Analyst",
+    //         "dept_name": "Information Technology",
+    //         "pay_grade": "Grade-1",
+    //         "supervisor_id": "74078"
+    //     }
     // }
 
-    var employee_model = new _employee_model(req.body);
-    employee_model._update(req.body.employee_id)
+    var employee_model = new _employee_model(req.body.new);
+    employee_model._update()
     .then((result) => {
         if(result){
             return res.status(200).json(result);
@@ -567,9 +569,9 @@ module.exports.delete_emergency_contact = (req,res) => {
 
 module.exports.insert_custom_attributes = (req,res) => {
   //expected body
-  // {
-  //     "attributes": [{"employee_id": "09929", "attribute" : "cust_sttr_1", "value" : "value_1"},{"employee_id": "09929", "attribute" : "cust_sttr_2", "value" : "value_2"}]
-  // }
+//   {
+//       "attributes": [{"employee_id": "09929", "attribute" : "cust_sttr_1", "value" : "value_1"},{"employee_id": "09929", "attribute" : "cust_sttr_2", "value" : "value_2"}]
+//   }
   var models = []
 
   req.body.attributes.forEach((attribute) => {
@@ -589,14 +591,15 @@ module.exports.insert_custom_attributes = (req,res) => {
 
 module.exports.update_custom_attribute = (req,res) => {
     // expected body
-    // {
+    // { "new" : {
     //     "employee_id" : "",
     //     "attribute" : "",    
     //     "value" : ""
+    //      }
     // }
 
     //TODO handle duplicate entries
-    var employee_custom_model = new _employee_custom_model(req.body);
+    var employee_custom_model = new _employee_custom_model(req.body.new);
     employee_custom_model._update()
     .then((result) => {
         if(result){
@@ -607,3 +610,4 @@ module.exports.update_custom_attribute = (req,res) => {
         return res.status(500).json({error : err.message});
     })
 }
+

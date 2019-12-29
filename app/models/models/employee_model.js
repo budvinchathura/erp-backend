@@ -1,7 +1,6 @@
 const model = require('../model')
 const mysql = require('mysql');
 
-
 const attrs = [	
 'employee_id',
 'first_name',
@@ -45,9 +44,9 @@ employee_model.prototype.find_by_job_title = function (job_title){
     return this.find_all(params);
 }
 
-employee_model.prototype._update = function (employee_id){
+employee_model.prototype._update = function (){
     var params = [];
-    params.push(mysql.escapeId('employee_id').concat(' = ').concat(mysql.escape(employee_id)));
+    params.push(mysql.escapeId('employee_id').concat(' = ').concat(mysql.escape(this.employee_id)));
     return this.update(params);
 }
 
