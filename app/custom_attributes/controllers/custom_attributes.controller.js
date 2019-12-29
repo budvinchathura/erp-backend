@@ -10,7 +10,7 @@ module.exports.view = (req, res) => {
         .then((custom_attributes) => {
             if(custom_attributes){
                 for (let index = 0; index < custom_attributes.length; index++) {
-                    custom_attributes[index] = custom_attributes[index].attribute
+                    custom_attributes[index] = clean_object(custom_attributes[index]);
                     
                 }
                 res.status(200).json(custom_attributes);
