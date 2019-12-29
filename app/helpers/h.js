@@ -16,3 +16,13 @@ module.exports.fix_date = function(inp_date){
     });
     return "".concat(new_date.slice(6,10),"-",new_date.slice(0,2),"-",new_date.slice(3,5));
 }
+module.exports.is_higher_access_level = function(comparee, comparer){
+    switch(comparee){
+        case "L2" : 
+            if(comparer == "L1") return true;
+            break;
+        case "L3" :
+            if(comparer == "L3" | comparer == "L2" | comparer == "L1") return true;
+    }
+    return false; 
+}

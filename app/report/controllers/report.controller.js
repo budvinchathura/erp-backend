@@ -43,7 +43,6 @@ module.exports.leave_by_department = (req, res) => {
                 if (leaves) {
                     for (let index = 0; index < leaves.length; index++) {
                         leaves[index] = clean_object(leaves[index]);
-
                     }
                     res.status(200).json(leaves);
                 } else {
