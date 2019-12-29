@@ -10,7 +10,7 @@ module.exports.view = (req, res) => {
         .then((departments) => {
             if(departments){
                 for (let index = 0; index < departments.length; index++) {
-                    departments[index] = departments[index].dept_name
+                    departments[index] = clean_object(departments[index])
                     
                 }
                 res.status(200).json(departments);
