@@ -10,7 +10,7 @@ module.exports.view = (req, res) => {
         .then((pay_grades) => {
             if(pay_grades){
                 for (let index = 0; index < pay_grades.length; index++) {
-                    pay_grades[index] = pay_grades[index].pay_grade
+                    pay_grades[index] = clean_object(pay_grades[index]);
                     
                 }
                 res.status(200).json(pay_grades);

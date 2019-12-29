@@ -75,11 +75,13 @@ module.exports.taken = (req, res) => {
     employee_leave_taken_procedure_model._view(req.user.employee_id)
         .then((results) => {
             if (results) {
-                results.forEach(element => {
-                    delete element.procedure;
-                    delete element.attrs;
-                });
-                res.status(200).json({ result: results });
+                for (let index = 0; index < results.length; index++) {
+                    results[index] = clean_object(results[index]);
+                    
+                }                
+                res.status(200).json(results);
+            }else{
+                res.status(200).json([]);
             }
         })
         .catch((error) => {
@@ -147,7 +149,7 @@ module.exports.view_leave_types = (req, res) => {
         .then((leave_types) => {
             if(leave_types){
                 for (let index = 0; index < leave_types.length; index++) {
-                    leave_types[index] = leave_types[index].leave_type;
+                    leave_types[index] = clean_object(leave_types[index]);
                     
                 }
                 res.status(200).json(leave_types);
