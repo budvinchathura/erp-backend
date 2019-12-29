@@ -10,7 +10,7 @@ module.exports.view = (req, res) => {
         .then((e_statuses) => {
             if(e_statuses){
                 for (let index = 0; index < e_statuses.length; index++) {
-                    e_statuses[index] = e_statuses[index].employment_status
+                    e_statuses[index] = clean_object(e_statuses[index]);
                     
                 }
                 res.status(200).json(e_statuses);
