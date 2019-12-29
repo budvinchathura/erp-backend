@@ -57,11 +57,26 @@ employee_model.prototype._update = function (){
     return this.update(params);
 }
 
+employee_model.prototype.filter_all = function (options){
+    const cols = ['marital_status','employment_status','active_status','job_title','dept_name','pay_grade']
+    var params = [];
+    cols.forEach((col) => {
+        if(!(options[col] === "ALL")){
+            params.push(mysql.escapeId(col).concat(' = ').concat(mysql.escape(options[col])));
+        }
+        
+    });
+    return this.find_all(params);
+
+}
+
 employee_model.prototype.find_subordinates = function(supervisor_id){
     var params = [];
     params.push(mysql.escapeId('supervisor_id').concat(' = ').concat(mysql.escape(supervisor_id)));
     return this.find_all(params);
 }
+
+
 
 //TODO delete
 
