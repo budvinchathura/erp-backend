@@ -23,6 +23,11 @@ employee_custom_model.prototype.find_by_employee_id = function (employee_id){
     return this.find_all(params);
 }
 
-
+employee_custom_model.prototype._update = function(){
+    var params = [];
+    params.push(mysql.escapeId('employee_id').concat(' = ').concat(mysql.escape(this.employee_id)));
+    params.push(mysql.escapeId('attribute').concat(' = ').concat(mysql.escape(this.attribute)));
+    return this.update(params);
+}
 
 module.exports = employee_custom_model;

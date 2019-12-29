@@ -342,7 +342,7 @@ module.exports.delete_contact_details = (req,res) => {
     })
 }
 
-module.exports.insert_email = (req,res) => {
+module.exports.insert_emails = (req,res) => {
       //expected body
     // {
     //     "email": [{"employee_id": "09929", "email" : "1984038134"},{"employee_id": "09929","email" : "17167461"}]
@@ -565,3 +565,45 @@ module.exports.delete_emergency_contact = (req,res) => {
     })
 }
 
+module.exports.insert_custom_attributes = (req,res) => {
+  //expected body
+  // {
+  //     "attributes": [{"employee_id": "09929", "attribute" : "cust_sttr_1", "value" : "value_1"},{"employee_id": "09929", "attribute" : "cust_sttr_2", "value" : "value_2"}]
+  // }
+  var models = []
+
+  req.body.attributes.forEach((attribute) => {
+      models.push(new _employee_custom_model(attribute));
+  });
+
+  db_service.transaction_insert(models)
+  .then((result) => {
+      if(result){
+          return res.status(200).json(result);
+      }
+  })
+  .catch((err) => {
+      res.status(500).json({error : err.message})
+  });
+}
+
+module.exports.update_custom_attribute = (req,res) => {
+    // expected body
+    // {
+    //     "employee_id" : "",
+    //     "attribute" : "",    
+    //     "value" : ""
+    // }
+
+    //TODO handle duplicate entries
+    var employee_custom_model = new _employee_custom_model(req.body);
+    employee_custom_model._update()
+    .then((result) => {
+        if(result){
+            return res.status(200).json(result);
+        }
+    })
+    .catch((err) => {
+        return res.status(500).json({error : err.message});
+    })
+}
