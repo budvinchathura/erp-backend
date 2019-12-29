@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-
+const joi = require('@hapi/joi');
 
 module.exports.valid_jwt_needed = function (req, res, next) {
     const token = req.header('erp-auth-token');
@@ -12,6 +12,20 @@ module.exports.valid_jwt_needed = function (req, res, next) {
         next();
     } catch (error) {
         res.status(400).send('Invalid Token');
+    }
+}
+
+module.exports.before_update_employee = function(req, res, next){
+    const schema = joi.object({
+        new:joi.object({
+            employee_id: joi.string().max(20).required(),
+         }).unknown(true).required(),
+    })
+    const { error } = schema.validate(req.body);
+    if (error) {
+        return res.status(400).json({error:error.details[0].message});
+    } else {
+        next();
     }
 }
 

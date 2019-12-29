@@ -9,7 +9,9 @@ var _employment_status_model = require('../../models/models/employment_status_mo
 var _pay_grade_model = require('../../models/models/pay_grade_model');
 var _department_model = require('../../models/models/department_model');
 const db_service = require('../../db/db_service');
-const { employee_search_by_id_validation } = require('../validation');
+const { employee_search_by_id_validation,
+        employee_insert_basic_validation,
+        employee_update_basic_validation } = require('../validation');
 const { clean_object,fix_date } = require("../../helpers/h");
 
 module.exports.search_by_id = (req, res) => {
@@ -249,6 +251,47 @@ module.exports.add = (req,res) => {
     });
 }
 
+module.exports.insert_basic_details = (req, res) => {
+    //expected body
+    //   {
+    //         "first_name": "Dwain",
+    //         "last_name": "Costa",
+    //         "nic": "114182682743",
+    //         "addr_house_no": "PO Box 5434",
+    //         "addr_line_1": "78th Floor",
+    //         "addr_line_2": "Whitmire",
+    //         "addr_city": "Reese",
+    //         "dob": "1951-06-03T18:30:00.000Z",
+    //         "marital_status": "Married",
+    //         "employment_status": "Contract-FT",
+    //         "job_title": "Communication Analyst",
+    //         "dept_name": "Information Technology",
+    //         "pay_grade": "Grade-1",
+    //     }
+
+    const { error } = employee_insert_basic_validation(req.body);
+
+    if (error) {
+        return res.status(400).json({error:error.details[0].message});
+    }
+
+    //TODO take this from helper function 
+    emp_id = req.body.employee.employee_id;
+
+    var employee_model = new _employee_model(req.body);
+    employee_model.employee_id = emp_id;
+    employee_model.supervisor_id = emp_id;
+    employee_model.insert()
+    .then((result) => {
+        if(result){
+            return res.status(200).json(result);
+        }
+    })
+    .catch((err) => {
+        return res.status(500).json({error : err.message});
+    })
+}
+
 module.exports.update_basic_details = (req, res) => {
     //expected body
     // {
@@ -271,6 +314,12 @@ module.exports.update_basic_details = (req, res) => {
     //         "supervisor_id": "74078"
     //     }
     // }
+
+    const { error } = employee_update_basic_validation(req.body);
+
+    if (error) {
+        return res.status(400).json({error:error.details[0].message});
+    }
 
     var employee_model = new _employee_model(req.body.new);
     employee_model._update()
