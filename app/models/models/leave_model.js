@@ -30,6 +30,15 @@ leave_model.prototype.find_by_employee_id = function (employee_id) {
     return this.find_all(params);
 }
 
+leave_model.prototype._update = function(){
+    var params = [];
+    params.push(mysql.escapeId('employee_id').concat(' = ').concat(mysql.escape(this.employee_id)));
+    params.push(mysql.escapeId('date').concat(' = ').concat(mysql.escape(this.date)));
+    params.push(mysql.escapeId('leave_type').concat(' = ').concat(mysql.escape(this.leave_type)));
+
+    return this.update(params);
+}
+
 
 
 
