@@ -45,6 +45,13 @@ employee_model.prototype.find_by_job_title = function (job_title){
     return this.find_all(params);
 }
 
+
+employee_model.prototype.find_by_department = function (department){
+    var params = [];
+    params.push(mysql.escapeId('dept_name').concat(' = ').concat(mysql.escape(department)));
+    return this.find_all(params);
+}
+
 employee_model.prototype._update = function (employee_id){
     var params = [];
     params.push(mysql.escapeId('employee_id').concat(' = ').concat(mysql.escape(employee_id)));
