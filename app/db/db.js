@@ -87,7 +87,33 @@ module.exports.update = function update(table, params, data, cb) {
     sql = sql.concat(conditions);
     console.log(sql);
     con.query(sql, cb);
+}
 
+module.exports.bulk_update = function bulk_update(table, param_array, data_array, cb){
+    if (param_array.length != data_array.length){
+        //TODO handle properly
+        return console.log("param_array and data array_should be equal in length")
+    }
+    sql = '';
+    for (index = 0; index < param_array.length; index++) { 
+        var sub_sql = 'UPDATE ';
+        sub_sql = sub_sql.concat(mysql.escapeId(table));
+        sub_sql = sub_sql.concat(' SET ? ');
+        sub_sql = mysql.format(sub_sql, data_array[index]);
+        var conditions = '';
+        if (param_array[index].conditions && param_array[index].conditions.length > 0) {
+            conditions = ' WHERE ';
+            param_array[index].conditions.forEach(condition => {
+                conditions = conditions.concat(condition, ' AND ');
+            });
+            conditions = conditions.slice(0, -4);
+        }
+        sub_sql = sub_sql.concat(conditions,';');
+        // console.log(sub_sql);
+        sql = sql.concat(sub_sql);
+    }
+    // console.log(sql);
+    this.exec_transaction_query(sql,cb);
 }
 
 module.exports.delete = function del(table, params, cb) {

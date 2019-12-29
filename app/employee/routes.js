@@ -24,7 +24,9 @@ router.post('/emergency',[valid_jwt_needed,minimum_access_level_required(['L1','
 router.patch('/emergency',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3']),before_update_employee,has_authority,employee_controller.update_emergency_contact]);
 router.delete('/emergency',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3']),employee_controller.delete_emergency_contact]);
 router.post('/custom',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3']),employee_controller.insert_custom_attributes]);
-router.patch('/custom',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3']),before_update_employee,has_authority,employee_controller.update_custom_attribute]);
+//change before_update_employee
+// router.patch('/custom',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3']),before_update_employee,has_authority,employee_controller.update_custom_attribute]);
+router.patch('/custom',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3']),employee_controller.update_custom_attribute]);
 
 router.get('/profile',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3']),employee_controller.profile]);
 router.get('/hr', [valid_jwt_needed,minimum_access_level_required(['Admin','L3','L1'])], employee_controller.view_hr);

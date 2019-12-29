@@ -30,4 +30,16 @@ employee_custom_model.prototype._update = function(){
     return this.update(params);
 }
 
+employee_custom_model.prototype._bulk_update = function(models){
+    var param_array = [];
+    models.forEach(model => {
+        var params = [];
+        params.push(mysql.escapeId('employee_id').concat(' = ').concat(mysql.escape(model.employee_id)));
+        params.push(mysql.escapeId('attribute').concat(' = ').concat(mysql.escape(model.attribute)));
+        param_array.push(params)
+    });
+    console.log(param_array);
+    return this.bulk_update(models,param_array);
+}
+
 module.exports = employee_custom_model;

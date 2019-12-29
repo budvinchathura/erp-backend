@@ -177,6 +177,45 @@ model.prototype.bulk_insert = function bulk_insert(models) {
     });
 }
 
+model.prototype.bulk_update = function bulk_update(models, param_array){
+    const table = this.table;
+    const attrs = this.attrs;
+    var objects = [];
+    var p_array = [];
+    for (index = 0; index < models.length; index++) {
+        var obj = {};
+        for(const attr of attrs){
+            if(!(models[index][attr]===undefined || models[index][attr]===null)){
+                obj[attr] = models[index][attr]
+            }
+        }
+        // console.log(obj)
+        objects.push(obj);
+        var _params = {
+            conditions : param_array[index]
+        };
+        // console.log(_params)
+        p_array.push(_params);
+    }
+    // console.log(objects);
+    // console.log(p_array);
+
+    return new Promise((resolve, reject) => {
+        const cb = function(error,results,fields){
+     
+            if(error){
+                reject(error);
+            } 
+            else{
+                resolve(true) 
+            }            
+        }
+        db.bulk_update(table,p_array,objects,cb)
+    });
+
+
+}
+
 model.prototype.get_db_object = function get_db_object(){
     var obj = {};
     for(const attr of this.attrs){

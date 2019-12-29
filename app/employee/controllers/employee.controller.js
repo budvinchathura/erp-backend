@@ -640,17 +640,19 @@ module.exports.insert_custom_attributes = (req,res) => {
 }
 
 module.exports.update_custom_attribute = (req,res) => {
-    // expected body
-    // { "new" : {
-    //     "employee_id" : "",
-    //     "attribute" : "",    
-    //     "value" : ""
-    //      }
-    // }
+// expected body
+//   {
+//       "attributes": [{"employee_id": "09929", "attribute" : "cust_sttr_1", "value" : "value_1"},{"employee_id": "09929", "attribute" : "cust_sttr_2", "value" : "value_2"}]
+//   }
 
     //TODO handle duplicate entries
-    var employee_custom_model = new _employee_custom_model(req.body.new);
-    employee_custom_model._update()
+    var models = []
+
+    req.body.attributes.forEach((attribute) => {
+        models.push(new _employee_custom_model(attribute));
+    });
+
+    new _employee_custom_model()._bulk_update(models)
     .then((result) => {
         if(result){
             return res.status(200).json(result);
