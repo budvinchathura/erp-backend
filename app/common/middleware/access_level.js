@@ -16,8 +16,15 @@ module.exports.minimum_access_level_required = (required_access_levels) => {
 };
 
 module.exports.has_authority = (req, res, next) => {
+    var emp_id;
+    if(req.body.new){
+        emp_id = req.body.new.employee_id;
+    } else {
+        emp_id = req.body.attributes[0].employee_id;
+    }
+
     var employee_model = new _employee_model();
-    employee_model.find_by_id(req.body.new.employee_id)
+    employee_model.find_by_id(emp_id)
     .then((employee) => {
         if (employee) {
             return employee;
