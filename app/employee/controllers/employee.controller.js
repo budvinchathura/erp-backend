@@ -203,7 +203,6 @@ module.exports.form_attributes = (req,res)=>{
     });
 }
 
-
 //TODO validate everything beyond this
 
 module.exports.add = (req,res) => {
@@ -469,7 +468,7 @@ module.exports.insert_dependent = (req,res) => {
     //     "contact_no" : "",
     //     "email" : ""
     // }
-    new _department_model(req.body).insert()
+    new _dependent_model(req.body).insert()
     .then((result) => {
         if(result){
             return res.status(200).json(result);
