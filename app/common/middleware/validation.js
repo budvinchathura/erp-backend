@@ -29,3 +29,17 @@ module.exports.before_update_employee = function(req, res, next){
     }
 }
 
+module.exports.before_update_employee_custom = function(req, res, next){
+    const schema = joi.object({
+        attributes:joi.array().items(joi.object({
+            employee_id: joi.string().max(20).required(),
+         }).unknown(true).required()).required(),
+    })
+    const { error } = schema.validate(req.body);
+    if (error) {
+        return res.status(400).json({error:error.details[0].message});
+    } else {
+        next();
+    }
+}
+
