@@ -213,7 +213,7 @@ DROP TABLE IF EXISTS `employee_custom_attributes`;
 CREATE TABLE IF NOT EXISTS `employee_custom_attributes` (
   `employee_id` varchar(50) NOT NULL,
   `attribute` varchar(50) NOT NULL,
-  `value` varchar(50) NOT NULL,
+  `value` varchar(50) ,
   PRIMARY KEY (`employee_id`,`attribute`),
   KEY `attribute` (`attribute`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
