@@ -10,8 +10,22 @@ var _pay_grade_model = require('../../models/models/pay_grade_model');
 var _department_model = require('../../models/models/department_model');
 const db_service = require('../../db/db_service');
 const { employee_search_by_id_validation,
+        employee_add_validation,
         employee_insert_basic_validation,
-        employee_update_basic_validation } = require('../validation');
+        employee_update_basic_validation,
+        employee_insert_contact_details_validation,
+        employee_update_contact_details_validation,
+        employee_delete_contact_details_validation,
+        employee_insert_emails_validation,
+        employee_update_email_validation,
+        employee_delete_email_validation,
+        employee_insert_dependent_validation,
+        employee_update_dependent_validation,
+        employee_delete_dependent_validation,
+        employee_insert_emergency_contact_validation,
+        employee_update_emergency_contact_validation,
+        employee_delete_emergency_contact_validation,
+        employee_insert_custom_attributes_validation } = require('../validation');
 const { clean_object,fix_date } = require("../../helpers/h");
 
 module.exports.search_by_id = (req, res) => {
@@ -206,6 +220,13 @@ module.exports.form_attributes = (req,res)=>{
 //TODO validate everything beyond this
 
 module.exports.add = (req,res) => {
+
+    const { error } = employee_add_validation(req.body);
+
+    if (error) {
+        return res.status(400).json({error:error.details[0].message});
+    }
+
     //set employee_id
     emp_id = req.body.employee.employee_id;
 
@@ -337,6 +358,11 @@ module.exports.insert_contact_details = (req,res) => {
     // {
     //     "contact_no": [{"employee_id": "09929", "contact_no" : "1984038134"},{"employee_id": "09929","contact_no" : "17167461"}]
     // }
+    const { error } = employee_insert_contact_details_validation(req.body);
+
+    if (error) {
+        return res.status(400).json({error:error.details[0].message});
+    }
 
     var models = []
 
@@ -362,6 +388,12 @@ module.exports.update_contact_details = (req,res) => {
     //     "new" : {"employee_id" : "00001","contact_no" : "12413453"}
     // }
 
+    const { error } = employee_update_contact_details_validation(req.body);
+
+    if (error) {
+        return res.status(400).json({error:error.details[0].message});
+    }
+
     //TODO handle duplicate entries
     var employee_contact_model = new _employee_contact_model(req.body.new);
     employee_contact_model._update(req.body.old.contact_no)
@@ -381,6 +413,13 @@ module.exports.delete_contact_details = (req,res) => {
     //     "employee_id": "09929",
     //     "contact_no": "0112224448"
     // }
+
+    const { error } = employee_delete_contact_details_validation(req.body);
+
+    if (error) {
+        return res.status(400).json({error:error.details[0].message});
+    }
+
     var employee_contact_model = new _employee_contact_model(req.body);
     employee_contact_model._delete()
     .then((result) => {
@@ -398,6 +437,13 @@ module.exports.insert_emails = (req,res) => {
     // {
     //     "email": [{"employee_id": "09929", "email" : "1984038134"},{"employee_id": "09929","email" : "17167461"}]
     // }
+
+    const { error } = employee_insert_emails_validation(req.body);
+
+    if (error) {
+        return res.status(400).json({error:error.details[0].message});
+    }
+
     var models = []
 
     req.body.email.forEach((email) => {
@@ -422,6 +468,12 @@ module.exports.update_email = (req,res) => {
     //     "new" : {"employee_id" : "00001","email" : "bar@gmail.com"}
     // }
 
+    const { error } = employee_update_email_validation(req.body);
+
+    if (error) {
+        return res.status(400).json({error:error.details[0].message});
+    }
+
     //TODO handle duplicate entries
     var employee_email_model = new _employee_email_model(req.body.new);
     employee_email_model._update(req.body.old.email)
@@ -441,6 +493,13 @@ module.exports.delete_email = (req,res) => {
     //     "employee_id": "09929",
     //     "email": "th@fagad.com"
     // }
+
+    const { error } = employee_delete_email_validation(req.body);
+
+    if (error) {
+        return res.status(400).json({error:error.details[0].message});
+    }
+
     var employee_email_model = new _employee_email_model(req.body);
     employee_email_model._delete()
     .then((result) => {
@@ -468,6 +527,13 @@ module.exports.insert_dependent = (req,res) => {
     //     "contact_no" : "",
     //     "email" : ""
     // }
+
+    const { error } = employee_insert_dependent_validation(req.body);
+
+    if (error) {
+        return res.status(400).json({error:error.details[0].message});
+    }
+
     new _dependent_model(req.body).insert()
     .then((result) => {
         if(result){
@@ -509,6 +575,13 @@ module.exports.update_dependent = (req,res) => {
     //         "email" : ""
     //     }
     // }
+
+    const { error } = employee_update_dependent_validation(req.body);
+
+    if (error) {
+        return res.status(400).json({error:error.details[0].message});
+    }
+
     var dependent_model = new _dependent_model(req.body.new);
     dependent_model._update(req.body.old.nic)
     .then((result) => {
@@ -537,6 +610,13 @@ module.exports.delete_dependent = (req,res) => {
     //     "contact_no" : "",
     //     "email" : ""
     // }
+
+    const { error } = employee_delete_dependent_validation(req.body);
+
+    if (error) {
+        return res.status(400).json({error:error.details[0].message});
+    }
+
     var dependent_model = new _dependent_model(req.body);
     dependent_model._delete()
     .then((result) => {
@@ -557,6 +637,13 @@ module.exports.insert_emergency_contact = (req,res) => {
     //     "name" : "",    
     //     "contact_no" : ""
     // }
+
+    const { error } = employee_insert_emergency_contact_validation(req.body);
+
+    if (error) {
+        return res.status(400).json({error:error.details[0].message});
+    }
+
     new _emergency_contact_model(req.body).insert()
     .then((result) => {
         if(result){
@@ -584,6 +671,13 @@ module.exports.update_emergency_contact = (req,res) => {
     //         "contact_no" : ""
     //         }
     // }
+
+    const { error } = employee_update_emergency_contact_validation(req.body);
+
+    if (error) {
+        return res.status(400).json({error:error.details[0].message});
+    }
+
     var emergency_contact_model = new _emergency_contact_model(req.body.new);
     emergency_contact_model._update(req.body.old.nic)
     .then((result) => {
@@ -604,6 +698,13 @@ module.exports.delete_emergency_contact = (req,res) => {
     //     "name" : "",    
     //     "contact_no" : ""
     // }
+
+    const { error } = employee_delete_emergency_contact_validation(req.body);
+
+    if (error) {
+        return res.status(400).json({error:error.details[0].message});
+    }
+
     var emergency_contact_model = new _emergency_contact_model(req.body);
     emergency_contact_model._delete()
     .then((result) => {
@@ -621,21 +722,28 @@ module.exports.insert_custom_attributes = (req,res) => {
 //   {
 //       "attributes": [{"employee_id": "09929", "attribute" : "cust_sttr_1", "value" : "value_1"},{"employee_id": "09929", "attribute" : "cust_sttr_2", "value" : "value_2"}]
 //   }
-  var models = []
 
-  req.body.attributes.forEach((attribute) => {
-      models.push(new _employee_custom_model(attribute));
-  });
+    const { error } = employee_insert_custom_attributes_validation(req.body);
 
-  db_service.transaction_insert(models)
-  .then((result) => {
-      if(result){
-          return res.status(200).json(result);
-      }
-  })
-  .catch((err) => {
-      res.status(500).json({error : err.message})
-  });
+    if (error) {
+        return res.status(400).json({error:error.details[0].message});
+    }
+
+    var models = [];
+
+    req.body.attributes.forEach((attribute) => {
+        models.push(new _employee_custom_model(attribute));
+    });
+
+    db_service.transaction_insert(models)
+    .then((result) => {
+        if(result){
+            return res.status(200).json(result);
+        }
+    })
+    .catch((err) => {
+        res.status(500).json({error : err.message})
+    });
 }
 
 module.exports.update_custom_attribute = (req,res) => {
@@ -643,6 +751,12 @@ module.exports.update_custom_attribute = (req,res) => {
 //   {
 //       "attributes": [{"employee_id": "09929", "attribute" : "cust_sttr_1", "value" : "value_1"},{"employee_id": "09929", "attribute" : "cust_sttr_2", "value" : "value_2"}]
 //   }
+
+    const { error } = employee_insert_custom_attributes_validation(req.body);
+
+    if (error) {
+        return res.status(400).json({error:error.details[0].message});
+    }
 
     //TODO handle duplicate entries
     var models = []
