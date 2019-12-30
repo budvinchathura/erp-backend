@@ -26,3 +26,9 @@ module.exports.is_higher_access_level = function(comparee, comparer){
     }
     return false; 
 }
+
+module.exports.get_unique_id = function () {
+    const hex_time = Date.now().toString(16).toUpperCase();
+    const random = Math.ceil(Math.random()*1000).toString(16).toUpperCase();
+    return hex_time.concat(random);
+}

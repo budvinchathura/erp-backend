@@ -39,14 +39,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `department_leave` (IN `dept` VARCHA
 end$$
 
 DROP PROCEDURE IF EXISTS `employee_leave_taken`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `employee_leave_taken` (IN `emp_id` VARCHAR(15))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `employee_leave_taken` (IN `emp_id` VARCHAR(50))  BEGIN
 
 SELECT leave_type,`limit`,leaves_taken from (SELECT employee_id, leave_type, `limit` FROM employee NATURAL JOIN pay_grade_leave WHERE employee_id=emp_id) as s NATURAL LEFT JOIN (SELECT employee_id, leave_type, COUNT(*) as leaves_taken FROM `leave` WHERE state="approved" AND (date BETWEEN DATE(CONCAT(YEAR(CURRENT_DATE()),"-01-01"))  AND CURRENT_DATE) GROUP BY employee_id, leave_type) as t;
 
 END$$
 
 DROP PROCEDURE IF EXISTS `my_leave_types`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `my_leave_types` (IN `emp_id` VARCHAR(15))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `my_leave_types` (IN `emp_id` VARCHAR(50))  BEGIN
 
 select `pay_grade` into @pay_grade from `employee` where `employee_id` = emp_id;
 select `leave_type` from `pay_grade_leave` where `pay_grade` = @pay_grade;
@@ -161,7 +161,7 @@ CREATE TABLE IF NOT EXISTS `employee` (
   `job_title` varchar(50) DEFAULT NULL,
   `dept_name` varchar(50) DEFAULT NULL,
   `pay_grade` varchar(20) DEFAULT NULL,
-  `supervisor_id` varchar(15) DEFAULT NULL,
+  `supervisor_id` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`employee_id`),
   KEY `job_title` (`job_title`),
   KEY `employment_status` (`employment_status`),
@@ -213,7 +213,7 @@ DROP TABLE IF EXISTS `employee_custom_attributes`;
 CREATE TABLE IF NOT EXISTS `employee_custom_attributes` (
   `employee_id` varchar(50) NOT NULL,
   `attribute` varchar(50) NOT NULL,
-  `value` varchar(50) NOT NULL,
+  `value` varchar(50) ,
   PRIMARY KEY (`employee_id`,`attribute`),
   KEY `attribute` (`attribute`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -331,7 +331,7 @@ CREATE TABLE IF NOT EXISTS `leave_full_details` (
 ,`job_title` varchar(50)
 ,`dept_name` varchar(50)
 ,`pay_grade` varchar(20)
-,`supervisor_id` varchar(15)
+,`supervisor_id` varchar(50)
 );
 
 -- --------------------------------------------------------

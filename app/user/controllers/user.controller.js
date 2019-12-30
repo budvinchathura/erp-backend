@@ -65,13 +65,13 @@ module.exports.register = (req, res) => {
                     }
                 })
                 .catch((err)=>{
-                    return res.status(500).json({error:err});
+                    return res.status(500).json({error:err.message});
                 })
             }
         })
         
         .catch((error) => {
-            return res.status(500).json({error:error});
+            return res.status(500).json({error:error.message});
         })
 
     // .catch((error)=>{
