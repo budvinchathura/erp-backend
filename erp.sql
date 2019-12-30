@@ -161,7 +161,7 @@ CREATE TABLE IF NOT EXISTS `employee` (
   `job_title` varchar(50) DEFAULT NULL,
   `dept_name` varchar(50) DEFAULT NULL,
   `pay_grade` varchar(20) DEFAULT NULL,
-  `supervisor_id` varchar(15) DEFAULT NULL,
+  `supervisor_id` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`employee_id`),
   KEY `job_title` (`job_title`),
   KEY `employment_status` (`employment_status`),
@@ -331,7 +331,7 @@ CREATE TABLE IF NOT EXISTS `leave_full_details` (
 ,`job_title` varchar(50)
 ,`dept_name` varchar(50)
 ,`pay_grade` varchar(20)
-,`supervisor_id` varchar(15)
+,`supervisor_id` varchar(50)
 );
 
 -- --------------------------------------------------------
