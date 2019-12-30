@@ -26,7 +26,7 @@ const { employee_search_by_id_validation,
         employee_update_emergency_contact_validation,
         employee_delete_emergency_contact_validation,
         employee_insert_custom_attributes_validation } = require('../validation');
-const { clean_object,fix_date } = require("../../helpers/h");
+const { clean_object,fix_date,get_unique_id } = require("../../helpers/h");
 
 module.exports.search_by_id = (req, res) => {
     const { error } = employee_search_by_id_validation(req.body);
@@ -228,7 +228,7 @@ module.exports.add = (req,res) => {
     }
 
     //set employee_id
-    emp_id = req.body.employee.employee_id;
+    emp_id = get_unique_id();
 
     var models = [];
 
@@ -295,8 +295,7 @@ module.exports.insert_basic_details = (req, res) => {
         return res.status(400).json({error:error.details[0].message});
     }
 
-    //TODO take this from helper function 
-    emp_id = req.body.employee.employee_id;
+    emp_id = get_unique_id();
 
     var employee_model = new _employee_model(req.body);
     employee_model.employee_id = emp_id;
