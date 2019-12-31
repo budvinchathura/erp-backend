@@ -1,7 +1,6 @@
 const joi = require('@hapi/joi');
 
-//TODO set correct sizes
-const employee_id_size = 20;
+const employee_id_size = 50;
 const first_name_size = 20;
 const last_name_size = 20;
 const nic_size = 15;
@@ -12,10 +11,10 @@ const addr_city_size = 20;
 const employment_status_size = 20;
 const job_title_size = 50;
 const dept_name_size = 50;
-const pay_grade_size = 50;
-const contact_no_size = 50;
+const pay_grade_size = 20;
+const contact_no_size = 20;
 const email_size = 50;
-const relationship_size = 50;
+const relationship_size = 20;
 const attribute_size = 50;
 const value_size = 50;
 
