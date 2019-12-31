@@ -69,7 +69,7 @@ module.exports.change_leave_state = (req,res)=>{
                         return res.status(400).json({error:"invalid content"});
                     }                    
                 }else{
-                    return res.status(401).json({error:"Supervisor Permission Required"});
+                    return res.status(400).json({error:"Supervisor Permission Required"});
                 }
             }else{
                 return res.status(400).json({error:"invalid content"});
