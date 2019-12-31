@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 29, 2019 at 04:08 PM
+-- Generation Time: Dec 31, 2019 at 02:17 PM
 -- Server version: 10.1.34-MariaDB
 -- PHP Version: 7.2.7
 
@@ -23,37 +23,6 @@ SET time_zone = "+05:30";
 --
 CREATE DATABASE IF NOT EXISTS `erp` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 USE `erp`;
-
-DELIMITER $$
---
--- Procedures
---
-DROP PROCEDURE IF EXISTS `department_leave`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `department_leave` (IN `dept` VARCHAR(20), IN `start_date` DATE, IN `end_date` DATE)  BEGIN
-	SELECT employee.employee_id,employee.first_name,employee.last_name,employee.job_title,`date`,`leave_type`,`reason`,`state`,`dept_name` 
-    
-    FROM `leave`,`employee` 
-	WHERE `date` BETWEEN start_date and end_date
-	and `dept_name` = dept
-	order by `date`;
-end$$
-
-DROP PROCEDURE IF EXISTS `employee_leave_taken`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `employee_leave_taken` (IN `emp_id` VARCHAR(50))  BEGIN
-
-SELECT leave_type,`limit`,leaves_taken from (SELECT employee_id, leave_type, `limit` FROM employee NATURAL JOIN pay_grade_leave WHERE employee_id=emp_id) as s NATURAL LEFT JOIN (SELECT employee_id, leave_type, COUNT(*) as leaves_taken FROM `leave` WHERE state="approved" AND (date BETWEEN DATE(CONCAT(YEAR(CURRENT_DATE()),"-01-01"))  AND CURRENT_DATE) GROUP BY employee_id, leave_type) as t;
-
-END$$
-
-DROP PROCEDURE IF EXISTS `my_leave_types`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `my_leave_types` (IN `emp_id` VARCHAR(50))  BEGIN
-
-select `pay_grade` into @pay_grade from `employee` where `employee_id` = emp_id;
-select `leave_type` from `pay_grade_leave` where `pay_grade` = @pay_grade;
-
-END$$
-
-DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -213,7 +182,7 @@ DROP TABLE IF EXISTS `employee_custom_attributes`;
 CREATE TABLE IF NOT EXISTS `employee_custom_attributes` (
   `employee_id` varchar(50) NOT NULL,
   `attribute` varchar(50) NOT NULL,
-  `value` varchar(50) ,
+  `value` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`employee_id`,`attribute`),
   KEY `attribute` (`attribute`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -302,7 +271,6 @@ CREATE TABLE IF NOT EXISTS `leave` (
 --   `leave_type`
 --       `leave_type` -> `leave_type`
 --
-
 
 -- --------------------------------------------------------
 
@@ -457,7 +425,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `user_access`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `user_access`  AS  select `user`.`employee_id` AS `employee_id`,`user`.`username` AS `username`,`user`.`password` AS `password`,`job_title`.`access_level` AS `access_level` from ((`user` left join `employee` on((`user`.`employee_id` = `employee`.`employee_id`))) left join `job_title` on((`employee`.`job_title` = `job_title`.`job_title`))) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `user_access`  AS  select `user`.`employee_id` AS `employee_id`,`user`.`username` AS `username`,`user`.`password` AS `password`,`job_title`.`access_level` AS `access_level` from ((`user` left join `employee` on((`user`.`employee_id` = `employee`.`employee_id`))) left join `job_title` on((`employee`.`job_title` = `job_title`.`job_title`))) where (`employee`.`active_status` = 1) ;
 
 --
 -- Constraints for dumped tables
