@@ -338,6 +338,7 @@ module.exports.insert_hr = (req, res) => {
     var employee_model = new _employee_model(req.body);
     employee_model.employee_id = emp_id;
     employee_model.supervisor_id = emp_id;
+    employee_model.active_status = 1;
     employee_model.job_title = hr_job_title;
     employee_model.insert()
     .then((result) => {
@@ -353,6 +354,7 @@ module.exports.insert_hr = (req, res) => {
 module.exports.update_basic_details = (req, res) => {
     //expected body
     // {
+    // "employee_id": "09929",
     // "new" : {
     //         "employee_id": "09929",
     //         "first_name": "Dwain",
@@ -394,6 +396,7 @@ module.exports.update_basic_details = (req, res) => {
 module.exports.insert_contact_details = (req,res) => {
     //expected body
     // {
+    //     "employee_id":"09929"
     //     "contact_no": [{"employee_id": "09929", "contact_no" : "1984038134"},{"employee_id": "09929","contact_no" : "17167461"}]
     // }
     const { error } = employee_insert_contact_details_validation(req.body);
@@ -422,6 +425,7 @@ module.exports.insert_contact_details = (req,res) => {
 module.exports.update_contact_details = (req,res) => {
     //expected body
     // {
+    //     "employee_id":"09929"
     //     "old" : {"employee_id" : "00001","contact_no" : "12418218"}
     //     "new" : {"employee_id" : "00001","contact_no" : "12413453"}
     // }
@@ -473,6 +477,7 @@ module.exports.delete_contact_details = (req,res) => {
 module.exports.insert_emails = (req,res) => {
       //expected body
     // {
+    //     "employee_id":"09929"
     //     "email": [{"employee_id": "09929", "email" : "1984038134"},{"employee_id": "09929","email" : "17167461"}]
     // }
 
@@ -502,6 +507,7 @@ module.exports.insert_emails = (req,res) => {
 module.exports.update_email = (req,res) => {
     //expected body
     // {
+    //     "employee_id":"09929"
     //     "old" : {"employee_id" : "00001","email" : "foo@gmail.com"}
     //     "new" : {"employee_id" : "00001","email" : "bar@gmail.com"}
     // }
@@ -586,6 +592,7 @@ module.exports.insert_dependent = (req,res) => {
 module.exports.update_dependent = (req,res) => {
     // expected body
     // {
+    //     "employee_id" : "",
     //     "old" : {
     //         "nic" : "",
     //         "employee_id" : "",
@@ -695,7 +702,8 @@ module.exports.insert_emergency_contact = (req,res) => {
 
 module.exports.update_emergency_contact = (req,res) => {
     // expected body
-    // {
+    // {   
+    //     "employee_id" : "",
     //     "old" : {
     //         "nic" : "",
     //         "employee_id" : "",
@@ -758,6 +766,7 @@ module.exports.delete_emergency_contact = (req,res) => {
 module.exports.insert_custom_attributes = (req,res) => {
   //expected body
 //   {
+//       "employee_id" : "",
 //       "attributes": [{"employee_id": "09929", "attribute" : "cust_sttr_1", "value" : "value_1"},{"employee_id": "09929", "attribute" : "cust_sttr_2", "value" : "value_2"}]
 //   }
 
@@ -785,8 +794,9 @@ module.exports.insert_custom_attributes = (req,res) => {
 }
 
 module.exports.update_custom_attribute = (req,res) => {
-// expected body
+//expected body
 //   {
+//       "employee_id" : "",
 //       "attributes": [{"employee_id": "09929", "attribute" : "cust_sttr_1", "value" : "value_1"},{"employee_id": "09929", "attribute" : "cust_sttr_2", "value" : "value_2"}]
 //   }
 
