@@ -8,6 +8,7 @@ router.post('/view',[valid_jwt_needed,minimum_access_level_required(['L1','L2','
 //TODO refactor request types
 //TODO validate requests
 router.post('/add',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3']),employee_controller.add]);
+router.delete('/delete',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3']),employee_controller.delete]);
 //TODO only allow admin to use this
 router.post('/hr',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3']),employee_controller.insert_hr]);
 router.get('/hr', [valid_jwt_needed,minimum_access_level_required(['Admin','L3','L1'])], employee_controller.view_hr);

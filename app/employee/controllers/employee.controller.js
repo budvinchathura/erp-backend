@@ -12,6 +12,7 @@ var _custom_attribute_model = require('../../models/models/custom_attribute_mode
 const db_service = require('../../db/db_service');
 const { employee_search_by_id_validation,
         employee_add_validation,
+        employee_delete_validation,
         employee_insert_basic_validation,
         employee_update_basic_validation,
         employee_insert_contact_details_validation,
@@ -228,8 +229,6 @@ module.exports.form_attributes = (req,res)=>{
     });
 }
 
-//TODO validate everything beyond this
-
 module.exports.add = (req,res) => {
 
     const { error } = employee_add_validation(req.body);
@@ -272,6 +271,32 @@ module.exports.add = (req,res) => {
     });
 
     db_service.transaction_insert(models)
+    .then((result) => {
+        if(result){
+            return res.status(200).json(result);
+        }
+    })
+    .catch((err) => {
+        res.status(500).json({error : err.message})
+    });
+}
+
+//TODO add validation
+module.exports.delete = (req,res) => {
+    //expected body
+    // {
+    //         "employee_id": "09929"
+    // }
+
+    const { error } = employee_delete_validation(req.body);
+
+    if (error) {
+        return res.status(400).json({error:error.details[0].message});
+    }
+
+    var employee_model = new _employee_model(req.body);
+    employee_model.active_status = 0;
+    employee_model._update()
     .then((result) => {
         if(result){
             return res.status(200).json(result);
