@@ -1,6 +1,7 @@
 var _job_title_model = require('../../models/models/job_title_model');
 const { clean_object } = require("../../helpers/h");
-const {job_title_add_update_validation} = require('../validation')
+const {job_title_add_update_validation,
+        job_title_update_validation} = require('../validation')
 
 
 module.exports.view = (req, res) => {
@@ -37,20 +38,46 @@ module.exports.add = (req,res)=>{
     }
 }
 
+// module.exports.update = (req,res)=>{
+//     const { error } = job_title_add_update_validation(req.body);
+//     if (error) {
+//         return res.status(400).json({ error: error.details[0].message });
+//     }else{
+//         var job_title_model = new _job_title_model(req.body);
+//         job_title_model._update()
+//         .then((result) => {
+//             if(result.affectedRows > 0){
+//                 return res.status(200).json({});
+//             }else{
+//                 return res.status(400).json({error:"invalid content"});
+//             }
+            
+//         }).catch((err) => {
+//             return res.status(500).json({ error: err.message });
+//         });
+//     }
+// }
+
 module.exports.update = (req,res)=>{
-    const { error } = job_title_add_update_validation(req.body);
+    // expected input
+    // {
+    //      "new":{
+    //         "job_title":"title 1",
+    //         "access_level":"L1" 
+    //     },
+    //     "old":{
+    //         "job_title":"title 2",
+    //         "access_level":"L1" 
+    //     }
+    // }
+    const { error } = job_title_update_validation(req.body);
     if (error) {
         return res.status(400).json({ error: error.details[0].message });
     }else{
-        var job_title_model = new _job_title_model(req.body);
-        job_title_model._update()
+        var job_title_model = new _job_title_model(req.body.new);
+        job_title_model._update(req.body.old.job_title)
         .then((result) => {
-            if(result.affectedRows > 0){
-                return res.status(200).json({});
-            }else{
-                return res.status(400).json({error:"invalid content"});
-            }
-            
+            return res.status(200).json({});
         }).catch((err) => {
             return res.status(500).json({ error: err.message });
         });

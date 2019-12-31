@@ -36,13 +36,17 @@ job_title_model.prototype.find_by_job_title = function(job_title){
     return this.find_first(params);
 }
 
-job_title_model.prototype._update = function(){
-    var params = [];
-    params.push(mysql.escapeId('job_title').concat(' = ').concat(mysql.escape(this.job_title)));
+// job_title_model.prototype._update = function(){
+//     var params = [];
+//     params.push(mysql.escapeId('job_title').concat(' = ').concat(mysql.escape(this.job_title)));
 
+//     return this.update(params);
+// }
+
+job_title_model.prototype._update = function (old_job_title){
+    var params = [];
+    params.push(mysql.escapeId('job_title').concat(' = ').concat(mysql.escape(old_job_title)));
     return this.update(params);
 }
-
-
 
 module.exports = job_title_model;
