@@ -31,4 +31,10 @@ user_model.prototype.find_by_username_or_employee_id = function(username,employe
     return this.find_first(params);
 }
 
+user_model.prototype._update = function () {
+    var params = [];
+    params.push(mysql.escapeId('employee_id').concat(' = ').concat(mysql.escape(this.employee_id)));
+    return this.update(params);
+}
+
 module.exports = user_model;
