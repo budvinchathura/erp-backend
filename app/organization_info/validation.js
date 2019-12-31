@@ -24,8 +24,14 @@ module.exports.organization_info_bulk_insert_validation = (data)=>{
 
 module.exports.organization_info_update_validation = (data)=>{
     const schema = joi.object({
-        key: joi.string().max(key_size).required(),
-        value: joi.string().max(value_size).required(),
+        old:joi.object({
+            key: joi.string().max(key_size),
+            value: joi.string().max(value_size)
+        }),
+        new:joi.object({
+            key: joi.string().max(key_size).required(),
+            value: joi.string().max(value_size).required(),
+        }).required(),
     })
     return schema.validate(data);
 }
@@ -33,6 +39,7 @@ module.exports.organization_info_update_validation = (data)=>{
 module.exports.organization_info_delete_validation = (data)=>{
     const schema = joi.object({
         key: joi.string().max(key_size).required(),
+        value: joi.string().max(value_size)
     })
     return schema.validate(data);
 }

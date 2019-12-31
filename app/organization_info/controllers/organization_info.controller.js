@@ -82,10 +82,16 @@ module.exports.bulk_insert = (req, res) => {
 
 //TODO update (value only ?)
 module.exports.update = (req,res) => {
-    //expected input
+    // expected input
     // {
-    //     "key":"key1",
-    //     "value": "value1"
+    //      "new":{
+    //         "key":"key1",
+    //         "value": "value1"
+    //     }
+    //     "old":{
+    //         "key":"key1",
+    //         "value": "value1"
+    //     }
     // }
     const { error } = organization_info_update_validation(req.body);
 
@@ -93,7 +99,7 @@ module.exports.update = (req,res) => {
         return res.status(400).json({error:error.details[0].message});
     }
 
-    var organization_info_model = new _organization_info_model(req.body);
+    var organization_info_model = new _organization_info_model(req.body.new);
     organization_info_model._update()
     .then((result) => {
         if (result) {
