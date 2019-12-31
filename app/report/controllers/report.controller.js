@@ -2,7 +2,7 @@ var _employee_by_department_procedure_model = require('../../models/models/emplo
 var _employee_model = require('../../models/models/employee_model');
 var _leave_by_department_procedure_model = require('../../models/models/leave_by_department_procedure_model');
 
-const { clean_object } = require("../../helpers/h");
+const { clean_object,fix_date } = require("../../helpers/h");
 const { emp_by_dept_validation, leave_by_dept_validation,employee_filter_validation} = require("../validation");
 
 module.exports.emp_by_department = (req, res) => {
@@ -43,6 +43,7 @@ module.exports.leave_by_department = (req, res) => {
                 if (leaves) {
                     for (let index = 0; index < leaves.length; index++) {
                         leaves[index] = clean_object(leaves[index]);
+                        leaves[index].date = fix_date(leaves[index].date)
                     }
                     res.status(200).json(leaves);
                 } else {
@@ -68,6 +69,7 @@ module.exports.employee_filter = (req, res) => {
                 if (emps) {
                     for (let index = 0; index < emps.length; index++) {
                         emps[index] = clean_object(emps[index]);
+                        emps[index].dob = fix_date(emps[index].dob);
 
                     }
                     res.status(200).json(emps);
