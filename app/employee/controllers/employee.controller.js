@@ -155,6 +155,9 @@ module.exports.view_hr = (req, res) => {
             var employee_model = new _employee_model();
             var hr_employee = await employee_model.find_by_job_title(job_title.job_title);
             if(hr_employee){
+                hr = clean_object(hr_employee[0]);
+                hr.dob = fix_date(hr.dob);
+
                 res.status(200).json({data:clean_object(hr_employee[0])});
             }else{
                 res.status(400).json({error : 'No employee with L3 access level'})
