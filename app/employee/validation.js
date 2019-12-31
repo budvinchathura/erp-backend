@@ -485,7 +485,7 @@ module.exports.employee_delete_emergency_contact_validation = (data)=>{
 }
 
 module.exports.employee_insert_custom_attributes_validation = (data)=>{
-  //expected body
+//expected body
 //   {
 //       "employee_id" : "",
 //       "attributes": [{"employee_id": "09929", "attribute" : "cust_sttr_1", "value" : "value_1"},{"employee_id": "09929", "attribute" : "cust_sttr_2", "value" : "value_2"}]
