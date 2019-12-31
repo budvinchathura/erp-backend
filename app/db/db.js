@@ -91,8 +91,8 @@ module.exports.update = function update(table, params, data, cb) {
 
 module.exports.bulk_update = function bulk_update(table, param_array, data_array, cb){
     if (param_array.length != data_array.length){
-        //TODO handle properly
-        return console.log("param_array and data array_should be equal in length")
+        console.log("param_array and data array_should be equal in length");
+        return Promise.reject({message : "unmatched param size"});
     }
     sql = '';
     for (index = 0; index < param_array.length; index++) { 
@@ -126,7 +126,8 @@ module.exports.delete = function del(table, params, cb) {
         });
         conditions = conditions.slice(0, -4);
     } else {
-        return console.log("no conditions given");    //TODO handle this properly
+        console.log("no conditions given");    
+        return Promise.reject({message : "no condition given for delete"})
     }
     sql = sql.concat(conditions);
     console.log(sql);

@@ -78,8 +78,4 @@ employee_model.prototype.find_subordinates = function(supervisor_id){
     return this.find_all(params);
 }
 
-
-
-//TODO delete
-
 module.exports = employee_model;
