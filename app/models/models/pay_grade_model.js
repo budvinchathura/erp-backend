@@ -22,6 +22,11 @@ pay_grade_model.prototype._find_all = function(){
     return this.find_all([]);
 }
 
+pay_grade_model.prototype._update = function (old_pay_grade){
+    var params = [];
+    params.push(mysql.escapeId('pay_grade').concat(' = ').concat(mysql.escape(old_pay_grade)));
+    return this.update(params);
+}
 
 
 module.exports = pay_grade_model;
