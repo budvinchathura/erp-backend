@@ -1,3 +1,6 @@
+//set hrm job title
+var hrm_job_title = "Human Resources Manager";
+
 var _employee_model = require('../../models/models/employee_model');
 var _employee_contact_model = require('../../models/models/employee_contact_model');
 var _employee_email_model = require('../../models/models/employee_email_model');
@@ -13,7 +16,8 @@ const db_service = require('../../db/db_service');
 const { employee_search_by_id_validation,
         employee_add_validation,
         employee_delete_validation,
-        employee_insert_basic_validation,
+        insert_hr_validation,
+        promote_to_hr_validation,
         employee_update_basic_validation,
         employee_insert_contact_details_validation,
         employee_update_contact_details_validation,
@@ -281,7 +285,6 @@ module.exports.add = (req,res) => {
     });
 }
 
-//TODO add validation
 module.exports.delete = (req,res) => {
     //expected body
     // {
@@ -308,8 +311,6 @@ module.exports.delete = (req,res) => {
 }
 
 module.exports.insert_hr = (req, res) => {
-    var hr_job_title = "Human Resources Manager";
-
     //expected body
     //   {
     //         "first_name": "Dwain",
@@ -327,7 +328,7 @@ module.exports.insert_hr = (req, res) => {
     //         "pay_grade": "Grade-1",
     //     }
 
-    const { error } = employee_insert_basic_validation(req.body);
+    const { error } = insert_hr_validation(req.body);
 
     if (error) {
         return res.status(400).json({error:error.details[0].message});
@@ -339,8 +340,35 @@ module.exports.insert_hr = (req, res) => {
     employee_model.employee_id = emp_id;
     employee_model.supervisor_id = emp_id;
     employee_model.active_status = 1;
-    employee_model.job_title = hr_job_title;
+    employee_model.job_title = hrm_job_title;
     employee_model.insert()
+    .then((result) => {
+        if(result){
+            return res.status(200).json(result);
+        }
+    })
+    .catch((err) => {
+        return res.status(500).json({error : err.message});
+    })
+}
+
+module.exports.promote_to_hr = (req, res) => {
+    //expected body
+    //   {
+    //         "employee_id": "DGS342f24S"
+    //    }
+
+    const { error } = promote_to_hr_validation(req.body);
+ 
+    if (error) {
+        return res.status(400).json({error:error.details[0].message});
+    }
+
+    var employee_model = new _employee_model(req.body);
+    employee_model.supervisor_id = req.body.employee_id;
+    employee_model.active_status = 1;
+    employee_model.job_title = hrm_job_title;
+    employee_model._update()
     .then((result) => {
         if(result){
             return res.status(200).json(result);

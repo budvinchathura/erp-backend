@@ -120,7 +120,7 @@ module.exports.employee_delete_validation = (data)=>{
     return schema.validate(data);
 } 
 
-module.exports.employee_insert_basic_validation = (data)=>{
+module.exports.insert_hr_validation = (data)=>{
     const schema = joi.object({
         first_name: joi.string().max(first_name_size).required(),
         last_name: joi.string().max(last_name_size).required(),
@@ -135,6 +135,14 @@ module.exports.employee_insert_basic_validation = (data)=>{
         job_title: joi.string().max(job_title_size),
         dept_name: joi.string().max(dept_name_size).required(),
         pay_grade: joi.string().max(pay_grade_size).required(),
+    })
+    return schema.validate(data);
+}
+
+module.exports.promote_to_hr_validation = (data)=>{
+    const schema = joi.object({
+        employee_id: joi.string().max(employee_id_size).required(),
+
     })
     return schema.validate(data);
 }
