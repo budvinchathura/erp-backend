@@ -15,7 +15,7 @@ module.exports.leave_state_change_validation = (data)=>{
         employee_id: joi.string().required(),
         date: joi.date().required(),
         leave_type: joi.string().required(),
-        state: joi.string().required().valid('approved','pending','rejected')
+        state: joi.string().required().valid('Approved','Pending','Rejected')
     })
 
     return schema.validate(data);
