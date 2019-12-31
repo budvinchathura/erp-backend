@@ -344,7 +344,7 @@ module.exports.insert_hr = (req, res) => {
     employee_model.supervisor_id = emp_id;
     employee_model.active_status = 1;
     employee_model.job_title = hrm_job_title;
-    employee_model.insert()
+    db_service.hr(employee_model)
     .then((result) => {
         if(result){
             return res.status(200).json(result);
@@ -371,7 +371,7 @@ module.exports.promote_to_hr = (req, res) => {
     employee_model.supervisor_id = req.body.employee_id;
     employee_model.active_status = 1;
     employee_model.job_title = hrm_job_title;
-    employee_model._update()
+    db_service.hr(employee_model,false)
     .then((result) => {
         if(result){
             return res.status(200).json(result);

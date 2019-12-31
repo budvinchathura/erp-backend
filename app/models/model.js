@@ -216,12 +216,22 @@ model.prototype.bulk_update = function bulk_update(models, param_array){
 
 }
 
-model.prototype.get_db_object = function get_db_object(){
+model.prototype.get_db_object = function (for_update = false){
     var obj = {};
-    for(const attr of this.attrs){
-        obj[attr] = this[attr]
-        if(obj[attr]===undefined || obj[attr]===null){
-            obj[attr] = 'DEFAULT'
+
+    if (for_update) {
+        for(const attr of this.attrs){
+            
+            if(!(this[attr]===undefined || this[attr]===null)){
+                obj[attr] = this[attr];
+            }
+        }
+    } else {
+        for(const attr of this.attrs){
+            obj[attr] = this[attr];
+            if(obj[attr]===undefined || obj[attr]===null){
+                obj[attr] = 'DEFAULT'
+            }
         }
     }
 
