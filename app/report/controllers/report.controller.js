@@ -69,6 +69,7 @@ module.exports.employee_filter = (req, res) => {
                 if (emps) {
                     for (let index = 0; index < emps.length; index++) {
                         emps[index] = clean_object(emps[index]);
+                        emps[index].dob = fix_date(emps[index].dob);
 
                     }
                     res.status(200).json(emps);
