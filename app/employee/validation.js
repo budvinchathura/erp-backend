@@ -1,5 +1,6 @@
 const joi = require('@hapi/joi');
 
+//TODO set correct sizes
 const employee_id_size = 20;
 const first_name_size = 20;
 const last_name_size = 20;
@@ -189,7 +190,7 @@ module.exports.employee_update_contact_details_validation = (data)=>{
     return schema.validate(data);
 }
 
-module.exports.employee_delete_contact_details_validation = ()=>{
+module.exports.employee_delete_contact_details_validation = (data)=>{
     //expected body
     // {
     //     "employee_id": "09929",
@@ -236,7 +237,7 @@ module.exports.employee_update_email_validation = (data)=>{
     return schema.validate(data);
 }
 
-module.exports.employee_delete_email_validation = ()=>{
+module.exports.employee_delete_email_validation = (data)=>{
     //expected body
     // {
     //     "employee_id": "09929",
@@ -249,7 +250,7 @@ module.exports.employee_delete_email_validation = ()=>{
     return schema.validate(data);
 }
 
-module.exports.employee_insert_dependent_validation = ()=>{
+module.exports.employee_insert_dependent_validation = (data)=>{
     // expected body
     // {
     //     "nic" : "",
@@ -280,7 +281,7 @@ module.exports.employee_insert_dependent_validation = ()=>{
     return schema.validate(data);
 }
 
-module.exports.employee_update_dependent_validation = ()=>{
+module.exports.employee_update_dependent_validation = (data)=>{
     // expected body
     // {
     //     "old" : {
@@ -341,7 +342,7 @@ module.exports.employee_update_dependent_validation = ()=>{
     return schema.validate(data);
 }
 
-module.exports.employee_delete_dependent_validation = ()=>{
+module.exports.employee_delete_dependent_validation = (data)=>{
     // expected body
     // {
     //     "nic" : "",
@@ -372,7 +373,7 @@ module.exports.employee_delete_dependent_validation = ()=>{
     return schema.validate(data);
 }
 
-module.exports.employee_insert_emergency_contact_validation = ()=>{
+module.exports.employee_insert_emergency_contact_validation = (data)=>{
     // expected body
     // {
     //     "nic" : "",
@@ -389,7 +390,7 @@ module.exports.employee_insert_emergency_contact_validation = ()=>{
     return schema.validate(data);
 }
 
-module.exports.employee_update_emergency_contact_validation = ()=>{
+module.exports.employee_update_emergency_contact_validation = (data)=>{
 // expected body
     // {
     //     "old" : {
@@ -422,7 +423,7 @@ module.exports.employee_update_emergency_contact_validation = ()=>{
     return schema.validate(data);
 }
 
-module.exports.employee_delete_emergency_contact_validation = ()=>{
+module.exports.employee_delete_emergency_contact_validation = (data)=>{
     // expected body
     // {
     //     "nic" : "",
@@ -439,7 +440,7 @@ module.exports.employee_delete_emergency_contact_validation = ()=>{
     return schema.validate(data);
 }
 
-module.exports.employee_insert_custom_attributes_validation = ()=>{
+module.exports.employee_insert_custom_attributes_validation = (data)=>{
     // expected body
 //   {
 //       "attributes": [{"employee_id": "09929", "attribute" : "cust_sttr_1", "value" : "value_1"},{"employee_id": "09929", "attribute" : "cust_sttr_2", "value" : "value_2"}]
