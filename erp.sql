@@ -32,7 +32,7 @@ DROP PROCEDURE IF EXISTS `department_leave`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `department_leave` (IN `dept` VARCHAR(20), IN `start_date` DATE, IN `end_date` DATE)  BEGIN
 	SELECT employee.employee_id,employee.first_name,employee.last_name,employee.job_title,`date`,`leave_type`,`reason`,`state`,`dept_name` 
     
-    FROM `leave`,`employee` 
+    FROM `leave` NATURAL LEFT JOIN `employee` 
 	WHERE `date` BETWEEN start_date and end_date
 	and `dept_name` = dept
 	order by `date`;
