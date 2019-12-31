@@ -8,6 +8,7 @@ var _job_title_model = require('../../models/models/job_title_model');
 var _employment_status_model = require('../../models/models/employment_status_model');
 var _pay_grade_model = require('../../models/models/pay_grade_model');
 var _department_model = require('../../models/models/department_model');
+var _custom_attribute_model = require('../../models/models/custom_attribute_model');
 const db_service = require('../../db/db_service');
 const { employee_search_by_id_validation,
         employee_add_validation,
@@ -205,6 +206,16 @@ module.exports.form_attributes = (req,res)=>{
         const pay_grades = await pay_grade_model._find_all();
         pay_grades.forEach((pay_grade) => {
             form_attributes.pay_grade.push(pay_grade.pay_grade);
+        });
+        return form_attributes;
+        
+    })
+    .then(async (form_attributes)=>{
+        form_attributes.custom_attributes = [];
+        var custom_attribute_model = new _custom_attribute_model();
+        const custom_attributes = await custom_attribute_model._find_all();
+        custom_attributes.forEach((attribute) => {
+            form_attributes.custom_attributes.push(attribute.attribute);
         });
         return form_attributes;
         
