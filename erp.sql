@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 31, 2019 at 02:17 PM
+-- Generation Time: Dec 31, 2019 at 06:18 PM
 -- Server version: 10.1.34-MariaDB
 -- PHP Version: 7.2.7
 
@@ -23,6 +23,57 @@ SET time_zone = "+05:30";
 --
 CREATE DATABASE IF NOT EXISTS `erp` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 USE `erp`;
+
+DELIMITER $$
+--
+-- Procedures
+--
+DROP PROCEDURE IF EXISTS `department_leave`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `department_leave` (IN `dept` VARCHAR(20), IN `start_date` DATE, IN `end_date` DATE)  BEGIN
+	SELECT employee.employee_id,employee.first_name,employee.last_name,employee.job_title,`date`,`leave_type`,`reason`,`state`,`dept_name` 
+    
+    FROM `leave`,`employee` 
+	WHERE `date` BETWEEN start_date and end_date
+	and `dept_name` = dept
+	order by `date`;
+end$$
+
+DROP PROCEDURE IF EXISTS `employee_leave_taken`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `employee_leave_taken` (IN `emp_id` VARCHAR(50))  BEGIN
+
+SELECT leave_type,`limit`,leaves_taken from (SELECT employee_id, leave_type, `limit` FROM employee NATURAL JOIN pay_grade_leave WHERE employee_id=emp_id) as s NATURAL LEFT JOIN (SELECT employee_id, leave_type, COUNT(*) as leaves_taken FROM `leave` WHERE state="approved" AND (date BETWEEN DATE(CONCAT(YEAR(CURRENT_DATE()),"-01-01"))  AND DATE(CONCAT(YEAR(CURRENT_DATE()),"-12-31"))) GROUP BY employee_id, leave_type) as t;
+
+END$$
+
+DROP PROCEDURE IF EXISTS `my_leave_types`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `my_leave_types` (IN `emp_id` VARCHAR(50))  BEGIN
+
+select `pay_grade` into @pay_grade from `employee` where `employee_id` = emp_id;
+select `leave_type` from `pay_grade_leave` where `pay_grade` = @pay_grade;
+
+END$$
+
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `admin`
+--
+
+DROP TABLE IF EXISTS `admin`;
+CREATE TABLE IF NOT EXISTS `admin` (
+  `username` varchar(50) NOT NULL,
+  `password` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `access_level` varchar(20) NOT NULL DEFAULT 'Admin',
+  PRIMARY KEY (`username`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- RELATIONSHIPS FOR TABLE `admin`:
+--
 
 -- --------------------------------------------------------
 
@@ -491,6 +542,15 @@ ALTER TABLE `pay_grade_leave`
 --
 ALTER TABLE `user`
   ADD CONSTRAINT `user_ibfk_1` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`);
+
+DELIMITER $$
+--
+-- Events
+--
+DROP EVENT `auto_reject_expired_leave`$$
+CREATE DEFINER=`root`@`localhost` EVENT `auto_reject_expired_leave` ON SCHEDULE EVERY 1 DAY STARTS '2019-12-01 00:00:00' ON COMPLETION NOT PRESERVE ENABLE DO UPDATE `leave` SET state = 'Rejected' WHERE state = 'Pending' AND date < CURRENT_DATE$$
+
+DELIMITER ;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

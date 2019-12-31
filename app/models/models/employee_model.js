@@ -54,7 +54,7 @@ employee_model.prototype.find_by_department = function (department){
 }
 
 employee_model.prototype._update = function (){
-    var params = default_params.slice();
+    var params = [];
     params.push(mysql.escapeId('employee_id').concat(' = ').concat(mysql.escape(this.employee_id)));
     return this.update(params);
 }
