@@ -125,7 +125,7 @@ module.exports.employee_insert_basic_validation = (data)=>{
         dob: joi.date().required(),
         marital_status: joi.string().required().valid('Married','Single','Divorced'),
         employment_status: joi.string().max(employment_status_size).required(),
-        job_title: joi.string().max(job_title_size).required(),
+        job_title: joi.string().max(job_title_size),
         dept_name: joi.string().max(dept_name_size).required(),
         pay_grade: joi.string().max(pay_grade_size).required(),
     })

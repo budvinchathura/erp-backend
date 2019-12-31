@@ -282,7 +282,9 @@ module.exports.add = (req,res) => {
     });
 }
 
-module.exports.insert_basic_details = (req, res) => {
+module.exports.insert_hr = (req, res) => {
+    var hr_job_title = "Human Resources Manager";
+
     //expected body
     //   {
     //         "first_name": "Dwain",
@@ -311,6 +313,7 @@ module.exports.insert_basic_details = (req, res) => {
     var employee_model = new _employee_model(req.body);
     employee_model.employee_id = emp_id;
     employee_model.supervisor_id = emp_id;
+    employee_model.job_title = hr_job_title;
     employee_model.insert()
     .then((result) => {
         if(result){
