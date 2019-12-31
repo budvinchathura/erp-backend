@@ -467,7 +467,6 @@ module.exports.update_contact_details = (req,res) => {
         return res.status(400).json({error:error.details[0].message});
     }
 
-    //TODO handle duplicate entries
     var employee_contact_model = new _employee_contact_model(req.body.new);
     employee_contact_model._update(req.body.old.contact_no)
     .then((result) => {
@@ -549,7 +548,6 @@ module.exports.update_email = (req,res) => {
         return res.status(400).json({error:error.details[0].message});
     }
 
-    //TODO handle duplicate entries
     var employee_email_model = new _employee_email_model(req.body.new);
     employee_email_model._update(req.body.old.email)
     .then((result) => {
@@ -837,7 +835,6 @@ module.exports.update_custom_attribute = (req,res) => {
         return res.status(400).json({error:error.details[0].message});
     }
 
-    //TODO handle duplicate entries
     var models = []
 
     req.body.attributes.forEach((attribute) => {
