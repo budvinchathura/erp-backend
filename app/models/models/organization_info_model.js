@@ -29,4 +29,10 @@ organization_info_model.prototype._delete = function(key){
     return this.delete(params);
 }
 
+organization_info_model.prototype._update = function (){
+    var params = [];
+    params.push(mysql.escapeId('key').concat(' = ').concat(mysql.escape(this.key)));
+    return this.update(params);
+}
+
 module.exports = organization_info_model;
