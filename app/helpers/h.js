@@ -16,6 +16,7 @@ module.exports.fix_date = function(inp_date){
     });
     return "".concat(new_date.slice(6,10),"-",new_date.slice(0,2),"-",new_date.slice(3,5));
 }
+
 module.exports.is_higher_access_level = function(comparee, comparer){
     switch(comparee){
         case "L2" : 
