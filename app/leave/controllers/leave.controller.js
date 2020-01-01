@@ -4,7 +4,7 @@ var _leave_type_model = require('../../models/models/leave_type_model');
 var _emp_leave_taken_procedure_model = require ('../../models/models/employee_leave_taken_procedure_model');
 var _my_leave_types_procedure_model = require ('../../models/models/my_leave_types_procedure_model');
 
-const { clean_object } = require("../../helpers/h");
+const { clean_object,fix_date } = require("../../helpers/h");
 const {leave_limit_add_update_validation,leave_add_validation,leave_type_add_validation,leave_type_update_validation} = require("../validation");
 
 
@@ -77,6 +77,7 @@ module.exports.taken = (req, res) => {
             if (results) {
                 for (let index = 0; index < results.length; index++) {
                     results[index] = clean_object(results[index]);
+                    results[index].date = fix_date(results[index].date);
                     
                 }                
                 res.status(200).json(results);
@@ -111,7 +112,8 @@ module.exports.history = (req,res)=>{
     .then((leaves) => {
         if(leaves){
             for (let index = 0; index < leaves.length; index++) {
-                leaves[index] = clean_object(leaves[index]);                
+                leaves[index] = clean_object(leaves[index]);
+                leaves[index].date = fix_date(leaves[index].date);               
             }
             res.status(200).json(leaves);
         } else { 

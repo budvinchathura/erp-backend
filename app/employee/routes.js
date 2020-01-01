@@ -13,7 +13,6 @@ router.post('/add',[valid_jwt_needed,minimum_access_level_required(['L3']),emplo
 router.delete('/delete',[valid_jwt_needed,minimum_access_level_required(['L3']),employee_controller.delete]);
 
 //L2,L3
-router.post('/view',[valid_jwt_needed,minimum_access_level_required(['L2','L3']),employee_controller.search_by_id]);
 router.patch('/basic',[valid_jwt_needed,minimum_access_level_required(['L2','L3']),before_update_employee,has_authority,employee_controller.update_basic_details]);
 router.post('/contact',[valid_jwt_needed,minimum_access_level_required(['L2','L3']),before_update_employee,has_authority,employee_controller.insert_contact_details]);
 router.patch('/contact',[valid_jwt_needed,minimum_access_level_required(['L2','L3']),before_update_employee,has_authority,employee_controller.update_contact_details]);
@@ -29,9 +28,14 @@ router.patch('/emergency',[valid_jwt_needed,minimum_access_level_required(['L2',
 router.delete('/emergency',[valid_jwt_needed,minimum_access_level_required(['L2','L3']),before_update_employee,has_authority,employee_controller.delete_emergency_contact]);
 router.post('/custom',[valid_jwt_needed,minimum_access_level_required(['L2','L3']),before_update_employee,has_authority,employee_controller.insert_custom_attributes]);
 router.patch('/custom',[valid_jwt_needed,minimum_access_level_required(['L2','L3']),before_update_employee,has_authority,employee_controller.update_custom_attribute]);
-router.get('/form-attributes', [valid_jwt_needed,minimum_access_level_required(['L2','L3'])], employee_controller.form_attributes);
+
+//L2,L3,Admin
+router.post('/view',[valid_jwt_needed,minimum_access_level_required(['L2','L3','Admin']),employee_controller.search_by_id]);
+router.get('/form-attributes', [valid_jwt_needed,minimum_access_level_required(['L2','L3','Admin'])], employee_controller.form_attributes);
+
+
 
 //L1,L2,L3,Admin
-router.get('/profile',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3','Admin']),employee_controller.profile]);
+router.get('/profile',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3']),employee_controller.profile]);
 
 module.exports = router
