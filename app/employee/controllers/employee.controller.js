@@ -14,25 +14,25 @@ var _department_model = require('../../models/models/department_model');
 var _custom_attribute_model = require('../../models/models/custom_attribute_model');
 const db_service = require('../../db/db_service');
 const { employee_search_by_id_validation,
-        employee_add_validation,
-        employee_activate_delete_validation,
-        insert_hr_validation,
-        promote_to_hr_validation,
-        employee_update_basic_validation,
-        employee_insert_contact_details_validation,
-        employee_update_contact_details_validation,
-        employee_delete_contact_details_validation,
-        employee_insert_emails_validation,
-        employee_update_email_validation,
-        employee_delete_email_validation,
-        employee_insert_dependent_validation,
-        employee_update_dependent_validation,
-        employee_delete_dependent_validation,
-        employee_insert_emergency_contact_validation,
-        employee_update_emergency_contact_validation,
-        employee_delete_emergency_contact_validation,
-        employee_insert_custom_attributes_validation } = require('../validation');
-const { clean_object,fix_date,get_unique_id } = require("../../helpers/h");
+    employee_add_validation,
+    employee_activate_delete_validation,
+    insert_hr_validation,
+    promote_to_hr_validation,
+    employee_update_basic_validation,
+    employee_insert_contact_details_validation,
+    employee_update_contact_details_validation,
+    employee_delete_contact_details_validation,
+    employee_insert_emails_validation,
+    employee_update_email_validation,
+    employee_delete_email_validation,
+    employee_insert_dependent_validation,
+    employee_update_dependent_validation,
+    employee_delete_dependent_validation,
+    employee_insert_emergency_contact_validation,
+    employee_update_emergency_contact_validation,
+    employee_delete_emergency_contact_validation,
+    employee_insert_custom_attributes_validation } = require('../validation');
+const { clean_object, fix_date, get_unique_id } = require("../../helpers/h");
 
 module.exports.search_by_id = (req, res) => {
     const { error } = employee_search_by_id_validation(req.body);
@@ -54,7 +54,7 @@ const search_by_id = (req, res, emp_id) => {
             if (employee) {
                 employee = clean_object(employee);
                 employee.dob = fix_date(employee.dob);
-                return {employee : employee};
+                return { employee: employee };
             } else {
                 return res.status(400).json({ error: 'could not find employee' });
             }
@@ -147,101 +147,101 @@ const search_by_id = (req, res, emp_id) => {
 module.exports.view_hr = (req, res) => {
     var job_title_model = new _job_title_model();
     job_title_model.find_by_access_level('L3')
-    .then((job_titles) => {
-        if(job_titles){
-            return job_titles[0];
+        .then((job_titles) => {
+            if (job_titles) {
+                return job_titles[0];
 
-        }else{
-            res.status(400).json({ error: 'Job Title with access level L3 is not in database'});
-        }
-    })
-    .then(async (job_title)=>{
-        if(job_title){
-            var employee_model = new _employee_model();
-            var hr_employee = await employee_model.find_by_job_title(job_title.job_title);
-            if(hr_employee){
-                hr = clean_object(hr_employee[0]);
-                hr.dob = fix_date(hr.dob);
-
-                res.status(200).json(clean_object(hr_employee[0]));
-            }else{
-                res.status(400).json({error : 'No employee with L3 access level'})
+            } else {
+                res.status(400).json({ error: 'Job Title with access level L3 is not in database' });
             }
-        }
-        // hr_employee = clean_object(hr_employee);
+        })
+        .then(async (job_title) => {
+            if (job_title) {
+                var employee_model = new _employee_model();
+                var hr_employee = await employee_model.find_by_job_title(job_title.job_title);
+                if (hr_employee) {
+                    hr = clean_object(hr_employee[0]);
+                    hr.dob = fix_date(hr.dob);
 
-    })
-    .catch((err) => {
-        return res.status(500).json({ error: err.message });
-    });
+                    res.status(200).json(clean_object(hr_employee[0]));
+                } else {
+                    res.status(400).json({ error: 'No employee with L3 access level' })
+                }
+            }
+            // hr_employee = clean_object(hr_employee);
+
+        })
+        .catch((err) => {
+            return res.status(500).json({ error: err.message });
+        });
 }
 
-module.exports.form_attributes = (req,res)=>{
+module.exports.form_attributes = (req, res) => {
     var form_attributes = {};
     var employment_status_model = new _employment_status_model();
     employment_status_model._find_all()
-    .then((statuses) => {
-        form_attributes.employment_status = [];
-        statuses.forEach((status) => {
-            form_attributes.employment_status.push(status.employment_status)
+        .then((statuses) => {
+            form_attributes.employment_status = [];
+            statuses.forEach((status) => {
+                form_attributes.employment_status.push(status.employment_status)
+            });
+            return form_attributes;
+
+        })
+        .then(async (form_attributes) => {
+            var job_title_model = new _job_title_model();
+            const job_titles = await job_title_model._find_all();
+
+            for (let index = 0; index < job_titles.length; index++) {
+                job_titles[index] = clean_object(job_titles[index]);
+            }
+            form_attributes.job_title = job_titles;
+
+            return form_attributes;
+        })
+        .then(async (form_attributes) => {
+            form_attributes.dept_name = [];
+            var department_model = new _department_model();
+            const department_names = await department_model._find_all();
+            department_names.forEach((department) => {
+                form_attributes.dept_name.push(department.dept_name);
+            });
+            return form_attributes;
+        })
+        .then(async (form_attributes) => {
+            form_attributes.pay_grade = [];
+            var pay_grade_model = new _pay_grade_model();
+            const pay_grades = await pay_grade_model._find_all();
+            pay_grades.forEach((pay_grade) => {
+                form_attributes.pay_grade.push(pay_grade.pay_grade);
+            });
+            return form_attributes;
+
+        })
+        .then(async (form_attributes) => {
+            form_attributes.custom_attributes = [];
+            var custom_attribute_model = new _custom_attribute_model();
+            const custom_attributes = await custom_attribute_model._find_all();
+            custom_attributes.forEach((attribute) => {
+                form_attributes.custom_attributes.push(attribute.attribute);
+            });
+            return form_attributes;
+
+        })
+        .then((form_attributes) => {
+            return res.status(200).json(form_attributes);
+        })
+        .catch((err) => {
+            return res.status(500).json({ error: err.message });
         });
-        return form_attributes;
-        
-    })
-    .then(async (form_attributes)=>{
-        var job_title_model = new _job_title_model();
-        const job_titles = await job_title_model._find_all();
-        
-        for (let index = 0; index < job_titles.length; index++) {
-            job_titles[index] = clean_object(job_titles[index]);            
-        }
-        form_attributes.job_title = job_titles;
-        
-        return form_attributes;
-    })
-    .then(async (form_attributes)=>{
-        form_attributes.dept_name=[];
-        var department_model = new _department_model();
-        const department_names = await department_model._find_all();
-        department_names.forEach((department) => {
-            form_attributes.dept_name.push(department.dept_name);
-        });
-        return form_attributes;
-    })
-    .then(async (form_attributes)=>{
-        form_attributes.pay_grade = [];
-        var pay_grade_model = new _pay_grade_model();
-        const pay_grades = await pay_grade_model._find_all();
-        pay_grades.forEach((pay_grade) => {
-            form_attributes.pay_grade.push(pay_grade.pay_grade);
-        });
-        return form_attributes;
-        
-    })
-    .then(async (form_attributes)=>{
-        form_attributes.custom_attributes = [];
-        var custom_attribute_model = new _custom_attribute_model();
-        const custom_attributes = await custom_attribute_model._find_all();
-        custom_attributes.forEach((attribute) => {
-            form_attributes.custom_attributes.push(attribute.attribute);
-        });
-        return form_attributes;
-        
-    })
-    .then((form_attributes)=>{
-        return res.status(200).json(form_attributes);
-    })
-    .catch((err) => {
-        return res.status(500).json({ error: err.message });
-    });
 }
 
-module.exports.add = (req,res) => {
+module.exports.add = (req, res) => {
 
     const { error } = employee_add_validation(req.body);
 
     if (error) {
-        return res.status(400).json({error:error.details[0].message});
+        return res.status(400).json({ error: error.details[0].message });
     }
 
     //set employee_id
@@ -278,17 +278,17 @@ module.exports.add = (req,res) => {
     });
 
     db_service.transaction_insert(models)
-    .then((result) => {
-        if(result){
-            return res.status(200).json(result);
-        }
-    })
-    .catch((err) => {
-        res.status(500).json({error : err.message})
-    });
+        .then((result) => {
+            if (result) {
+                return res.status(200).json(result);
+            }
+        })
+        .catch((err) => {
+            res.status(500).json({ error: err.message })
+        });
 }
 
-module.exports.delete = (req,res) => {
+module.exports.delete = (req, res) => {
     //expected body
     // {
     //         "employee_id": "09929"
@@ -297,23 +297,40 @@ module.exports.delete = (req,res) => {
     const { error } = employee_activate_delete_validation(req.body);
 
     if (error) {
-        return res.status(400).json({error:error.details[0].message});
+        return res.status(400).json({ error: error.details[0].message });
     }
 
-    var employee_model = new _employee_model(req.body);
-    employee_model.active_status = 0;
-    employee_model._update()
-    .then((result) => {
-        if(result){
-            return res.status(200).json(result);
-        }
-    })
-    .catch((err) => {
-        res.status(500).json({error : err.message})
-    });
+    var employee_model = new _employee_model();
+    employee_model.find_by_id(req.body.employee_id)
+        .then((employee) => {
+            if (employee) {
+                if (employee.job_title == "Human Resources Manager") {
+                    res.status(400).json({ error: "Can not deactivate Human Resources Manager" });
+                } else {
+                    employee.active_status = 0;
+                    employee._update()
+                        .then((result) => {
+                            if (result) {
+                                return res.status(200).json(result);
+                            }
+                        })
+                        .catch((err) => {
+                            res.status(500).json({ error: err.message })
+                        });
+                }
+            } else {
+                return res.status(400).json({ error: "Could not find employee" });
+            }
+
+        }).catch((err) => {
+            res.status(500).json({ error: err.message });
+        });
+
+
+
 }
 
-module.exports.activate = (req,res) => {
+module.exports.activate = (req, res) => {
     //expected body
     // {
     //         "employee_id": "09929"
@@ -322,20 +339,35 @@ module.exports.activate = (req,res) => {
     const { error } = employee_activate_delete_validation(req.body);
 
     if (error) {
-        return res.status(400).json({error:error.details[0].message});
+        return res.status(400).json({ error: error.details[0].message });
     }
 
-    var employee_model = new _employee_model(req.body);
-    employee_model.active_status = 1;
-    employee_model._update()
-    .then((result) => {
-        if(result){
-            return res.status(200).json(result);
-        }
-    })
-    .catch((err) => {
-        res.status(500).json({error : err.message})
-    });
+    var employee_model = new _employee_model();
+    employee_model.find_by_id(req.body.employee_id)
+        .then((employee) => {
+            if (employee) {
+                if (employee.job_title == "Human Resources Manager") {
+                    res.status(400).json({ error: "Please contact administrator to activate a Human Resources Manager" });
+                } else {
+                    employee.active_status = 1;
+                    employee._update()
+                        .then((result) => {
+                            if (result) {
+                                return res.status(200).json(result);
+                            }
+                        })
+                        .catch((err) => {
+                            res.status(500).json({ error: err.message })
+                        });
+                }
+            } else {
+                return res.status(400).json({ error: "Could not find employee" });
+            }
+
+        }).catch((err) => {
+            res.status(500).json({ error: err.message });
+        });
+
 }
 
 module.exports.insert_hr = (req, res) => {
@@ -359,7 +391,7 @@ module.exports.insert_hr = (req, res) => {
     const { error } = insert_hr_validation(req.body);
 
     if (error) {
-        return res.status(400).json({error:error.details[0].message});
+        return res.status(400).json({ error: error.details[0].message });
     }
 
     emp_id = get_unique_id();
@@ -370,14 +402,14 @@ module.exports.insert_hr = (req, res) => {
     employee_model.active_status = 1;
     employee_model.job_title = hrm_job_title;
     db_service.hr(employee_model)
-    .then((result) => {
-        if(result){
-            return res.status(200).json(result);
-        }
-    })
-    .catch((err) => {
-        return res.status(500).json({error : err.message});
-    })
+        .then((result) => {
+            if (result) {
+                return res.status(200).json(result);
+            }
+        })
+        .catch((err) => {
+            return res.status(500).json({ error: err.message });
+        })
 }
 
 module.exports.promote_to_hr = (req, res) => {
@@ -387,24 +419,24 @@ module.exports.promote_to_hr = (req, res) => {
     //    }
 
     const { error } = promote_to_hr_validation(req.body);
- 
+
     if (error) {
-        return res.status(400).json({error:error.details[0].message});
+        return res.status(400).json({ error: error.details[0].message });
     }
 
     var employee_model = new _employee_model(req.body);
     employee_model.supervisor_id = req.body.employee_id;
     employee_model.active_status = 1;
     employee_model.job_title = hrm_job_title;
-    db_service.hr(employee_model,false)
-    .then((result) => {
-        if(result){
-            return res.status(200).json(result);
-        }
-    })
-    .catch((err) => {
-        return res.status(500).json({error : err.message});
-    })
+    db_service.hr(employee_model, false)
+        .then((result) => {
+            if (result) {
+                return res.status(200).json(result);
+            }
+        })
+        .catch((err) => {
+            return res.status(500).json({ error: err.message });
+        })
 }
 
 module.exports.update_basic_details = (req, res) => {
@@ -434,22 +466,48 @@ module.exports.update_basic_details = (req, res) => {
     const { error } = employee_update_basic_validation(req.body);
 
     if (error) {
-        return res.status(400).json({error:error.details[0].message});
+        return res.status(400).json({ error: error.details[0].message });
     }
 
-    var employee_model = new _employee_model(req.body.new);
-    employee_model._update()
-    .then((result) => {
-        if(result){
-            return res.status(200).json(result);
-        }
-    })
-    .catch((err) => {
-        return res.status(500).json({error : err.message});
-    })
+    var employee_model = new _employee_model()
+    employee_model.find_by_id(req.body.new.employee_id)
+        .then((employee) => {
+            if (employee) {
+
+                if (employee.active_status == 1 && employee.job_title == "Human Resources Manager" && req.body.new.job_title != "Human Resources Manager") {
+                    return res.status(400).json({ error: "Can not change job title of current Human Resources Manager" });
+
+                }
+                else if (employee.active_status == 1 && employee.job_title != "Human Resources Manager" && req.body.new.job_title == "Human Resources Manager") {
+                    return res.status(400).json({ error: "Contact administrator to appoint new Human Resources Manager" });
+                } else {
+                    var new_employee_model = new _employee_model(req.body.new);
+                    new_employee_model._update()
+                        .then((result) => {
+                            if (result) {
+                                return res.status(200).json(result);
+                            }
+                        })
+                        .catch((err) => {
+                            return res.status(500).json({ error: err.message });
+                        })
+
+                }
+            }
+            else {
+                return res.status(400).json({ error: "Could not find employee" });
+            }
+
+        }).catch((err) => {
+            return res.status(500).json({ error: err.message });
+        });
+
+
+
+
 }
 
-module.exports.insert_contact_details = (req,res) => {
+module.exports.insert_contact_details = (req, res) => {
     //expected body
     // {
     //     "employee_id":"09929"
@@ -458,7 +516,7 @@ module.exports.insert_contact_details = (req,res) => {
     const { error } = employee_insert_contact_details_validation(req.body);
 
     if (error) {
-        return res.status(400).json({error:error.details[0].message});
+        return res.status(400).json({ error: error.details[0].message });
     }
 
     var models = []
@@ -468,17 +526,17 @@ module.exports.insert_contact_details = (req,res) => {
     });
 
     db_service.transaction_insert(models)
-    .then((result) => {
-        if(result){
-            return res.status(200).json(result);
-        }
-    })
-    .catch((err) => {
-        res.status(500).json({error : err.message})
-    });
+        .then((result) => {
+            if (result) {
+                return res.status(200).json(result);
+            }
+        })
+        .catch((err) => {
+            res.status(500).json({ error: err.message })
+        });
 }
 
-module.exports.update_contact_details = (req,res) => {
+module.exports.update_contact_details = (req, res) => {
     //expected body
     // {
     //     "employee_id":"09929"
@@ -489,22 +547,22 @@ module.exports.update_contact_details = (req,res) => {
     const { error } = employee_update_contact_details_validation(req.body);
 
     if (error) {
-        return res.status(400).json({error:error.details[0].message});
+        return res.status(400).json({ error: error.details[0].message });
     }
 
     var employee_contact_model = new _employee_contact_model(req.body.new);
     employee_contact_model._update(req.body.old.contact_no)
-    .then((result) => {
-        if(result){
-            return res.status(200).json(result);
-        }
-    })
-    .catch((err) => {
-        return res.status(500).json({error : err.message});
-    })
+        .then((result) => {
+            if (result) {
+                return res.status(200).json(result);
+            }
+        })
+        .catch((err) => {
+            return res.status(500).json({ error: err.message });
+        })
 }
 
-module.exports.delete_contact_details = (req,res) => {
+module.exports.delete_contact_details = (req, res) => {
     //expected body
     // {
     //     "employee_id": "09929",
@@ -514,23 +572,23 @@ module.exports.delete_contact_details = (req,res) => {
     const { error } = employee_delete_contact_details_validation(req.body);
 
     if (error) {
-        return res.status(400).json({error:error.details[0].message});
+        return res.status(400).json({ error: error.details[0].message });
     }
 
     var employee_contact_model = new _employee_contact_model(req.body);
     employee_contact_model._delete()
-    .then((result) => {
-        if(result){
-            return res.status(200).json(result);
-        }
-    })
-    .catch((err) => {
-        return res.status(500).json({error : err.message});
-    })
+        .then((result) => {
+            if (result) {
+                return res.status(200).json(result);
+            }
+        })
+        .catch((err) => {
+            return res.status(500).json({ error: err.message });
+        })
 }
 
-module.exports.insert_emails = (req,res) => {
-      //expected body
+module.exports.insert_emails = (req, res) => {
+    //expected body
     // {
     //     "employee_id":"09929"
     //     "email": [{"employee_id": "09929", "email" : "1984038134"},{"employee_id": "09929","email" : "17167461"}]
@@ -539,7 +597,7 @@ module.exports.insert_emails = (req,res) => {
     const { error } = employee_insert_emails_validation(req.body);
 
     if (error) {
-        return res.status(400).json({error:error.details[0].message});
+        return res.status(400).json({ error: error.details[0].message });
     }
 
     var models = []
@@ -549,17 +607,17 @@ module.exports.insert_emails = (req,res) => {
     });
 
     db_service.transaction_insert(models)
-    .then((result) => {
-        if(result){
-            return res.status(200).json(result);
-        }
-    })
-    .catch((err) => {
-        res.status(500).json({error : err.message})
-    });
+        .then((result) => {
+            if (result) {
+                return res.status(200).json(result);
+            }
+        })
+        .catch((err) => {
+            res.status(500).json({ error: err.message })
+        });
 }
 
-module.exports.update_email = (req,res) => {
+module.exports.update_email = (req, res) => {
     //expected body
     // {
     //     "employee_id":"09929"
@@ -570,22 +628,22 @@ module.exports.update_email = (req,res) => {
     const { error } = employee_update_email_validation(req.body);
 
     if (error) {
-        return res.status(400).json({error:error.details[0].message});
+        return res.status(400).json({ error: error.details[0].message });
     }
 
     var employee_email_model = new _employee_email_model(req.body.new);
     employee_email_model._update(req.body.old.email)
-    .then((result) => {
-        if(result){
-            return res.status(200).json(result);
-        }
-    })
-    .catch((err) => {
-        return res.status(500).json({error : err.message});
-    })
+        .then((result) => {
+            if (result) {
+                return res.status(200).json(result);
+            }
+        })
+        .catch((err) => {
+            return res.status(500).json({ error: err.message });
+        })
 }
 
-module.exports.delete_email = (req,res) => {
+module.exports.delete_email = (req, res) => {
     //expected body
     // {
     //     "employee_id": "09929",
@@ -595,22 +653,22 @@ module.exports.delete_email = (req,res) => {
     const { error } = employee_delete_email_validation(req.body);
 
     if (error) {
-        return res.status(400).json({error:error.details[0].message});
+        return res.status(400).json({ error: error.details[0].message });
     }
 
     var employee_email_model = new _employee_email_model(req.body);
     employee_email_model._delete()
-    .then((result) => {
-        if(result){
-            return res.status(200).json(result);
-        }
-    })
-    .catch((err) => {
-        return res.status(500).json({error : err.message});
-    })
+        .then((result) => {
+            if (result) {
+                return res.status(200).json(result);
+            }
+        })
+        .catch((err) => {
+            return res.status(500).json({ error: err.message });
+        })
 }
 
-module.exports.insert_dependent = (req,res) => {
+module.exports.insert_dependent = (req, res) => {
     // expected body
     // {
     //     "nic" : "",
@@ -629,21 +687,21 @@ module.exports.insert_dependent = (req,res) => {
     const { error } = employee_insert_dependent_validation(req.body);
 
     if (error) {
-        return res.status(400).json({error:error.details[0].message});
+        return res.status(400).json({ error: error.details[0].message });
     }
 
     new _dependent_model(req.body).insert()
-    .then((result) => {
-        if(result){
-            return res.status(200).json(result);
-        }
-    })
-    .catch((err) => {
-        return res.status(500).json({error : err.message});
-    })
+        .then((result) => {
+            if (result) {
+                return res.status(200).json(result);
+            }
+        })
+        .catch((err) => {
+            return res.status(500).json({ error: err.message });
+        })
 }
 
-module.exports.update_dependent = (req,res) => {
+module.exports.update_dependent = (req, res) => {
     // expected body
     // {
     //     "employee_id" : "",
@@ -678,23 +736,23 @@ module.exports.update_dependent = (req,res) => {
     const { error } = employee_update_dependent_validation(req.body);
 
     if (error) {
-        return res.status(400).json({error:error.details[0].message});
+        return res.status(400).json({ error: error.details[0].message });
     }
 
     var dependent_model = new _dependent_model(req.body.new);
     dependent_model._update(req.body.old.nic)
-    .then((result) => {
-        if(result){
-            return res.status(200).json(result);
-        }
-    })
-    .catch((err) => {
-        return res.status(500).json({error : err.message});
-    })
+        .then((result) => {
+            if (result) {
+                return res.status(200).json(result);
+            }
+        })
+        .catch((err) => {
+            return res.status(500).json({ error: err.message });
+        })
 
 }
 
-module.exports.delete_dependent = (req,res) => {
+module.exports.delete_dependent = (req, res) => {
     // expected body
     // {
     //     "nic" : "",
@@ -713,22 +771,22 @@ module.exports.delete_dependent = (req,res) => {
     const { error } = employee_delete_dependent_validation(req.body);
 
     if (error) {
-        return res.status(400).json({error:error.details[0].message});
+        return res.status(400).json({ error: error.details[0].message });
     }
 
     var dependent_model = new _dependent_model(req.body);
     dependent_model._delete()
-    .then((result) => {
-        if(result){
-            return res.status(200).json(result);
-        }
-    })
-    .catch((err) => {
-        return res.status(500).json({error : err.message});
-    })
+        .then((result) => {
+            if (result) {
+                return res.status(200).json(result);
+            }
+        })
+        .catch((err) => {
+            return res.status(500).json({ error: err.message });
+        })
 }
 
-module.exports.insert_emergency_contact = (req,res) => {
+module.exports.insert_emergency_contact = (req, res) => {
     // expected body
     // {
     //     "nic" : "",
@@ -740,21 +798,21 @@ module.exports.insert_emergency_contact = (req,res) => {
     const { error } = employee_insert_emergency_contact_validation(req.body);
 
     if (error) {
-        return res.status(400).json({error:error.details[0].message});
+        return res.status(400).json({ error: error.details[0].message });
     }
 
     new _emergency_contact_model(req.body).insert()
-    .then((result) => {
-        if(result){
-            return res.status(200).json(result);
-        }
-    })
-    .catch((err) => {
-        return res.status(500).json({error : err.message});
-    })
+        .then((result) => {
+            if (result) {
+                return res.status(200).json(result);
+            }
+        })
+        .catch((err) => {
+            return res.status(500).json({ error: err.message });
+        })
 }
 
-module.exports.update_emergency_contact = (req,res) => {
+module.exports.update_emergency_contact = (req, res) => {
     // expected body
     // {   
     //     "employee_id" : "",
@@ -775,22 +833,22 @@ module.exports.update_emergency_contact = (req,res) => {
     const { error } = employee_update_emergency_contact_validation(req.body);
 
     if (error) {
-        return res.status(400).json({error:error.details[0].message});
+        return res.status(400).json({ error: error.details[0].message });
     }
 
     var emergency_contact_model = new _emergency_contact_model(req.body.new);
     emergency_contact_model._update(req.body.old.nic)
-    .then((result) => {
-        if(result){
-            return res.status(200).json(result);
-        }
-    })
-    .catch((err) => {
-        return res.status(500).json({error : err.message});
-    })
+        .then((result) => {
+            if (result) {
+                return res.status(200).json(result);
+            }
+        })
+        .catch((err) => {
+            return res.status(500).json({ error: err.message });
+        })
 }
 
-module.exports.delete_emergency_contact = (req,res) => {
+module.exports.delete_emergency_contact = (req, res) => {
     // expected body
     // {
     //     "nic" : "",
@@ -802,32 +860,32 @@ module.exports.delete_emergency_contact = (req,res) => {
     const { error } = employee_delete_emergency_contact_validation(req.body);
 
     if (error) {
-        return res.status(400).json({error:error.details[0].message});
+        return res.status(400).json({ error: error.details[0].message });
     }
 
     var emergency_contact_model = new _emergency_contact_model(req.body);
     emergency_contact_model._delete()
-    .then((result) => {
-        if(result){
-            return res.status(200).json(result);
-        }
-    })
-    .catch((err) => {
-        return res.status(500).json({error : err.message});
-    })
+        .then((result) => {
+            if (result) {
+                return res.status(200).json(result);
+            }
+        })
+        .catch((err) => {
+            return res.status(500).json({ error: err.message });
+        })
 }
 
-module.exports.insert_custom_attributes = (req,res) => {
-  //expected body
-//   {
-//       "employee_id" : "",
-//       "attributes": [{"employee_id": "09929", "attribute" : "cust_sttr_1", "value" : "value_1"},{"employee_id": "09929", "attribute" : "cust_sttr_2", "value" : "value_2"}]
-//   }
+module.exports.insert_custom_attributes = (req, res) => {
+    //expected body
+    //   {
+    //       "employee_id" : "",
+    //       "attributes": [{"employee_id": "09929", "attribute" : "cust_sttr_1", "value" : "value_1"},{"employee_id": "09929", "attribute" : "cust_sttr_2", "value" : "value_2"}]
+    //   }
 
     const { error } = employee_insert_custom_attributes_validation(req.body);
 
     if (error) {
-        return res.status(400).json({error:error.details[0].message});
+        return res.status(400).json({ error: error.details[0].message });
     }
 
     var models = [];
@@ -837,27 +895,27 @@ module.exports.insert_custom_attributes = (req,res) => {
     });
 
     db_service.transaction_insert(models)
-    .then((result) => {
-        if(result){
-            return res.status(200).json(result);
-        }
-    })
-    .catch((err) => {
-        res.status(500).json({error : err.message})
-    });
+        .then((result) => {
+            if (result) {
+                return res.status(200).json(result);
+            }
+        })
+        .catch((err) => {
+            res.status(500).json({ error: err.message })
+        });
 }
 
-module.exports.update_custom_attribute = (req,res) => {
-//expected body
-//   {
-//       "employee_id" : "",
-//       "attributes": [{"employee_id": "09929", "attribute" : "cust_sttr_1", "value" : "value_1"},{"employee_id": "09929", "attribute" : "cust_sttr_2", "value" : "value_2"}]
-//   }
+module.exports.update_custom_attribute = (req, res) => {
+    //expected body
+    //   {
+    //       "employee_id" : "",
+    //       "attributes": [{"employee_id": "09929", "attribute" : "cust_sttr_1", "value" : "value_1"},{"employee_id": "09929", "attribute" : "cust_sttr_2", "value" : "value_2"}]
+    //   }
 
     const { error } = employee_insert_custom_attributes_validation(req.body);
 
     if (error) {
-        return res.status(400).json({error:error.details[0].message});
+        return res.status(400).json({ error: error.details[0].message });
     }
 
     var models = []
@@ -867,13 +925,13 @@ module.exports.update_custom_attribute = (req,res) => {
     });
 
     new _employee_custom_model()._bulk_update(models)
-    .then((result) => {
-        if(result){
-            return res.status(200).json(result);
-        }
-    })
-    .catch((err) => {
-        return res.status(500).json({error : err.message});
-    })
+        .then((result) => {
+            if (result) {
+                return res.status(200).json(result);
+            }
+        })
+        .catch((err) => {
+            return res.status(500).json({ error: err.message });
+        })
 }
 
