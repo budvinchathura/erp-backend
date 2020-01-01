@@ -20,7 +20,7 @@ leave_model.prototype._find_all = function(){
 }
 
 leave_model.prototype.apply_leave = function(){
-    this.state = 'pending';
+    this.state = 'Pending';
     return this.insert();
 }
 
