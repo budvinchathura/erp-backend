@@ -28,10 +28,10 @@ detailed_leave_model.prototype = Object.create(model.prototype);
 
 
 
-detailed_leave_model.prototype.find_by_supervisor_id = function (supervisor_id,state = 'all') {
+detailed_leave_model.prototype.find_by_supervisor_id = function (supervisor_id,state = 'ALL') {
     var params = [];
     params.push(mysql.escapeId('supervisor_id').concat(' = ').concat(mysql.escape(supervisor_id)));
-    if(state !=='all'){
+    if(state !=='ALL'){
         params.push(mysql.escapeId('state').concat(' = ').concat(mysql.escape(state)));
     }
     return this.find_all(params);
