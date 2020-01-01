@@ -5,7 +5,7 @@ var _emp_leave_taken_procedure_model = require ('../../models/models/employee_le
 var _my_leave_types_procedure_model = require ('../../models/models/my_leave_types_procedure_model');
 
 const { clean_object,fix_date } = require("../../helpers/h");
-const {leave_limit_add_update_validation,leave_add_validation,leave_type_add_validation,leave_type_update_validation} = require("../validation");
+const {leave_limit_add_update_validation,leave_add_validation,leave_type_add_validation,leave_type_update_validation,leave_limit_update_validation} = require("../validation");
 
 
 module.exports.view_limits = (req, res) => {
@@ -47,12 +47,24 @@ module.exports.add_limit = (req,res)=>{
 }
 
 module.exports.update_limit = (req,res)=>{
+    // {
+    //     "new":{
+    //         "pay_grade":"",
+    //         "leave_type":"",
+    //         "limit":""
+    //     },
+    //     "old":{
+    //         "pay_grade":"",
+    //         "leave_type":"",
+    //         "limit":""
+    //     }
+    // }
 
-    const { error } = leave_limit_add_update_validation(req.body);
+    const { error } = leave_limit_update_validation(req.body);
     if (error) {
         return res.status(400).json({ error: error.details[0].message });
     }else{
-        var leave_limit_model = new _leave_limit_model(req.body);
+        var leave_limit_model = new _leave_limit_model(req.body.new);
         leave_limit_model._update()
         .then((result) => {
             if(result.affectedRows > 0){
@@ -67,8 +79,6 @@ module.exports.update_limit = (req,res)=>{
     }    
 
 }
-
-
 
 module.exports.taken = (req, res) => {
     var employee_leave_taken_procedure_model = new _emp_leave_taken_procedure_model();
