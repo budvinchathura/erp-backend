@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 01, 2020 at 08:51 AM
+-- Generation Time: Jan 01, 2020 at 06:00 PM
 -- Server version: 10.1.34-MariaDB
 -- PHP Version: 7.2.7
 
@@ -545,14 +545,7 @@ ALTER TABLE `pay_grade_leave`
 ALTER TABLE `user`
   ADD CONSTRAINT `user_ibfk_1` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`);
 
-DELIMITER $$
---
--- Events
---
-DROP EVENT `auto_reject_expired_leave`$$
-CREATE DEFINER=`root`@`localhost` EVENT `auto_reject_expired_leave` ON SCHEDULE EVERY 1 DAY STARTS '2019-12-01 00:00:00' ON COMPLETION NOT PRESERVE ENABLE DO UPDATE `leave` SET state = 'Rejected' WHERE state = 'Pending' AND date < CURRENT_DATE$$
 
-DELIMITER ;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
