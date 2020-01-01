@@ -105,7 +105,7 @@ module.exports.employee_add_validation = (data) => {
         })),
         custom:joi.array().items(joi.object({
             attribute: joi.string().max(attribute_size).required(),
-            value: joi.string().max(value_size).required(),
+            value: joi.string().max(value_size).allow('',null),
         })),
         dependents:joi.array().items(joi.object({
             nic: joi.string().max(nic_size).required(),
