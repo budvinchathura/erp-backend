@@ -4,6 +4,7 @@ const employee_id_size = 50;
 const first_name_size = 20;
 const last_name_size = 20;
 const nic_size = 15;
+const gender_size = 20;
 const addr_house_no_size = 20;
 const addr_line_1_size = 20;
 const addr_line_2_size = 20;
@@ -70,6 +71,7 @@ module.exports.employee_add_validation = (data) => {
             first_name: joi.string().max(first_name_size).required(),
             last_name: joi.string().max(last_name_size).required(),
             nic: joi.string().max(nic_size).required(),
+            gender: joi.string().max(gender_size).required().valid("Male","Female","Prefer not to say"),
             addr_house_no: joi.string().max(addr_house_no_size).required(),
             addr_line_1: joi.string().max(addr_line_1_size).required(),
             addr_line_2: joi.string().max(addr_line_2_size),
@@ -125,6 +127,7 @@ module.exports.insert_hr_validation = (data)=>{
         first_name: joi.string().max(first_name_size).required(),
         last_name: joi.string().max(last_name_size).required(),
         nic: joi.string().max(nic_size).required(),
+        gender: joi.string().max(gender_size).required().valid("Male","Female","Prefer not to say"),
         addr_house_no: joi.string().max(addr_house_no_size).required(),
         addr_line_1: joi.string().max(addr_line_1_size).required(),
         addr_line_2: joi.string().max(addr_line_2_size),
@@ -179,6 +182,7 @@ module.exports.employee_update_basic_validation = (data)=>{
             first_name: joi.string().max(first_name_size),
             last_name: joi.string().max(last_name_size),
             nic: joi.string().max(nic_size),
+            gender: joi.string().max(gender_size).valid("Male","Female","Prefer not to say"),
             addr_house_no: joi.string().max(addr_house_no_size),
             addr_line_1: joi.string().max(addr_line_1_size),
             addr_line_2: joi.string().max(addr_line_2_size),

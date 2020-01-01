@@ -8,6 +8,7 @@ const attrs = [
 'first_name',
 'last_name',
 'nic',
+'gender',
 'addr_house_no',
 'addr_line_1',
 'addr_line_2',
