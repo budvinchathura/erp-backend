@@ -7,7 +7,7 @@ CREATE OR REPLACE TRIGGER leave_state_update_check BEFORE UPDATE
  	SET NEW.state = 'Pending';
  END IF;
  
- IF not new.state = 'Pending' then
+ IF not new.state = 'Rejected' then
 	if datediff(new.date,current_date()) <=0 then
 		SIGNAL SQLSTATE '23000'
                 SET MESSAGE_TEXT = 'Leave approve or reject is permitted only for future dates';
@@ -38,7 +38,7 @@ CREATE OR REPLACE TRIGGER leave_limit_update_check BEFORE UPDATE
  ON pay_grade_leave
  FOR EACH ROW
  BEGIN
- IF NEW.leave_type = 'NO-PAY' AND NEW.limit < 50 THEN
+ IF NEW.leave_type = 'No-Pay' AND NEW.limit < 50 THEN
  	SET NEW.limit = 50;
  END IF;
  IF NEW.limit < 0 THEN
