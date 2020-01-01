@@ -22,6 +22,12 @@ custom_attribute_model.prototype._find_all = function(){
     return this.find_all([]);
 }
 
+custom_attribute_model.prototype._update = function (old_attribute){
+    var params = [];
+    params.push(mysql.escapeId('attribute').concat(' = ').concat(mysql.escape(old_attribute)));
+    return this.update(params);
+}
+
 
 
 module.exports = custom_attribute_model;
