@@ -31,7 +31,7 @@ router.post('/custom',[valid_jwt_needed,minimum_access_level_required(['L2','L3'
 router.patch('/custom',[valid_jwt_needed,minimum_access_level_required(['L2','L3']),before_update_employee,has_authority,employee_controller.update_custom_attribute]);
 router.get('/form-attributes', [valid_jwt_needed,minimum_access_level_required(['L2','L3'])], employee_controller.form_attributes);
 
-//L1,L2,L3
-router.get('/profile',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3']),employee_controller.profile]);
+//L1,L2,L3,Admin
+router.get('/profile',[valid_jwt_needed,minimum_access_level_required(['L1','L2','L3','Admin']),employee_controller.profile]);
 
 module.exports = router
