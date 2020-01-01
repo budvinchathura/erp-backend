@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 31, 2019 at 06:18 PM
+-- Generation Time: Jan 01, 2020 at 08:51 AM
 -- Server version: 10.1.34-MariaDB
 -- PHP Version: 7.2.7
 
@@ -32,7 +32,7 @@ DROP PROCEDURE IF EXISTS `department_leave`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `department_leave` (IN `dept` VARCHAR(20), IN `start_date` DATE, IN `end_date` DATE)  BEGIN
 	SELECT employee.employee_id,employee.first_name,employee.last_name,employee.job_title,`date`,`leave_type`,`reason`,`state`,`dept_name` 
     
-    FROM `leave` NATURAL LEFT JOIN `employee` 
+    FROM `leave` NATURAL left join `employee` 
 	WHERE `date` BETWEEN start_date and end_date
 	and `dept_name` = dept
 	order by `date`;
@@ -170,6 +170,7 @@ CREATE TABLE IF NOT EXISTS `employee` (
   `first_name` varchar(20) DEFAULT NULL,
   `last_name` varchar(20) DEFAULT NULL,
   `nic` varchar(15) DEFAULT NULL,
+  `gender` varchar(20) NOT NULL DEFAULT 'Prefer not to say',
   `addr_house_no` varchar(20) DEFAULT NULL,
   `addr_line_1` varchar(20) DEFAULT NULL,
   `addr_line_2` varchar(20) DEFAULT NULL,
@@ -339,6 +340,7 @@ CREATE TABLE IF NOT EXISTS `leave_full_details` (
 ,`first_name` varchar(20)
 ,`last_name` varchar(20)
 ,`nic` varchar(15)
+,`gender` varchar(20)
 ,`addr_house_no` varchar(20)
 ,`addr_line_1` varchar(20)
 ,`addr_line_2` varchar(20)
@@ -467,7 +469,7 @@ CREATE TABLE IF NOT EXISTS `user_access` (
 --
 DROP TABLE IF EXISTS `leave_full_details`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `leave_full_details`  AS  select `leave`.`employee_id` AS `employee_id`,`leave`.`date` AS `date`,`leave`.`leave_type` AS `leave_type`,`leave`.`reason` AS `reason`,`leave`.`state` AS `state`,`employee`.`first_name` AS `first_name`,`employee`.`last_name` AS `last_name`,`employee`.`nic` AS `nic`,`employee`.`addr_house_no` AS `addr_house_no`,`employee`.`addr_line_1` AS `addr_line_1`,`employee`.`addr_line_2` AS `addr_line_2`,`employee`.`addr_city` AS `addr_city`,`employee`.`dob` AS `dob`,`employee`.`marital_status` AS `marital_status`,`employee`.`employment_status` AS `employment_status`,`employee`.`active_status` AS `active_status`,`employee`.`job_title` AS `job_title`,`employee`.`dept_name` AS `dept_name`,`employee`.`pay_grade` AS `pay_grade`,`employee`.`supervisor_id` AS `supervisor_id` from (`leave` left join `employee` on((`leave`.`employee_id` = `employee`.`employee_id`))) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `leave_full_details`  AS  select `leave`.`employee_id` AS `employee_id`,`leave`.`date` AS `date`,`leave`.`leave_type` AS `leave_type`,`leave`.`reason` AS `reason`,`leave`.`state` AS `state`,`employee`.`first_name` AS `first_name`,`employee`.`last_name` AS `last_name`,`employee`.`nic` AS `nic`,`employee`.`gender` AS `gender`,`employee`.`addr_house_no` AS `addr_house_no`,`employee`.`addr_line_1` AS `addr_line_1`,`employee`.`addr_line_2` AS `addr_line_2`,`employee`.`addr_city` AS `addr_city`,`employee`.`dob` AS `dob`,`employee`.`marital_status` AS `marital_status`,`employee`.`employment_status` AS `employment_status`,`employee`.`active_status` AS `active_status`,`employee`.`job_title` AS `job_title`,`employee`.`dept_name` AS `dept_name`,`employee`.`pay_grade` AS `pay_grade`,`employee`.`supervisor_id` AS `supervisor_id` from (`leave` left join `employee` on((`leave`.`employee_id` = `employee`.`employee_id`))) ;
 
 -- --------------------------------------------------------
 
@@ -498,11 +500,11 @@ ALTER TABLE `emergency_contact`
 -- Constraints for table `employee`
 --
 ALTER TABLE `employee`
-  ADD CONSTRAINT `employee_ibfk_1` FOREIGN KEY (`job_title`) REFERENCES `job_title` (`job_title`),
-  ADD CONSTRAINT `employee_ibfk_2` FOREIGN KEY (`employment_status`) REFERENCES `employment_status` (`employment_status`),
-  ADD CONSTRAINT `employee_ibfk_4` FOREIGN KEY (`pay_grade`) REFERENCES `pay_grade` (`pay_grade`),
+  ADD CONSTRAINT `employee_ibfk_1` FOREIGN KEY (`job_title`) REFERENCES `job_title` (`job_title`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `employee_ibfk_2` FOREIGN KEY (`employment_status`) REFERENCES `employment_status` (`employment_status`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `employee_ibfk_4` FOREIGN KEY (`pay_grade`) REFERENCES `pay_grade` (`pay_grade`) ON UPDATE CASCADE,
   ADD CONSTRAINT `employee_ibfk_5` FOREIGN KEY (`supervisor_id`) REFERENCES `employee` (`employee_id`),
-  ADD CONSTRAINT `employee_ibfk_6` FOREIGN KEY (`dept_name`) REFERENCES `department` (`dept_name`);
+  ADD CONSTRAINT `employee_ibfk_6` FOREIGN KEY (`dept_name`) REFERENCES `department` (`dept_name`) ON UPDATE CASCADE;
 
 --
 -- Constraints for table `employee_contact_no`
@@ -514,7 +516,7 @@ ALTER TABLE `employee_contact_no`
 -- Constraints for table `employee_custom_attributes`
 --
 ALTER TABLE `employee_custom_attributes`
-  ADD CONSTRAINT `employee_custom_attributes_ibfk_1` FOREIGN KEY (`attribute`) REFERENCES `custom_attribute` (`attribute`),
+  ADD CONSTRAINT `employee_custom_attributes_ibfk_1` FOREIGN KEY (`attribute`) REFERENCES `custom_attribute` (`attribute`) ON UPDATE CASCADE,
   ADD CONSTRAINT `employee_custom_attributes_ibfk_2` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`);
 
 --
@@ -528,14 +530,14 @@ ALTER TABLE `employee_email`
 --
 ALTER TABLE `leave`
   ADD CONSTRAINT `leave_ibfk_1` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`),
-  ADD CONSTRAINT `leave_ibfk_2` FOREIGN KEY (`leave_type`) REFERENCES `leave_type` (`leave_type`);
+  ADD CONSTRAINT `leave_ibfk_2` FOREIGN KEY (`leave_type`) REFERENCES `leave_type` (`leave_type`) ON UPDATE CASCADE;
 
 --
 -- Constraints for table `pay_grade_leave`
 --
 ALTER TABLE `pay_grade_leave`
-  ADD CONSTRAINT `pay_grade_leave_ibfk_1` FOREIGN KEY (`pay_grade`) REFERENCES `pay_grade` (`pay_grade`),
-  ADD CONSTRAINT `pay_grade_leave_ibfk_2` FOREIGN KEY (`leave_type`) REFERENCES `leave_type` (`leave_type`);
+  ADD CONSTRAINT `pay_grade_leave_ibfk_1` FOREIGN KEY (`pay_grade`) REFERENCES `pay_grade` (`pay_grade`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `pay_grade_leave_ibfk_2` FOREIGN KEY (`leave_type`) REFERENCES `leave_type` (`leave_type`) ON UPDATE CASCADE;
 
 --
 -- Constraints for table `user`
