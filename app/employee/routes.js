@@ -11,6 +11,7 @@ router.patch('/hr',[valid_jwt_needed,minimum_access_level_required(['Admin']),em
 //L3
 router.post('/add',[valid_jwt_needed,minimum_access_level_required(['L3']),employee_controller.add]);
 router.delete('/delete',[valid_jwt_needed,minimum_access_level_required(['L3']),employee_controller.delete]);
+router.post('/activate',[valid_jwt_needed,minimum_access_level_required(['L3']),employee_controller.activate]);
 
 //L2,L3
 router.patch('/basic',[valid_jwt_needed,minimum_access_level_required(['L2','L3']),before_update_employee,has_authority,employee_controller.update_basic_details]);

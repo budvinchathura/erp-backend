@@ -128,7 +128,7 @@ module.exports.employee_add_validation = (data) => {
     return schema.validate(data);
 }
 
-module.exports.employee_delete_validation = (data)=>{
+module.exports.employee_activate_delete_validation = (data)=>{
     const schema = joi.object({
         employee_id: joi.string().required(),
     })
