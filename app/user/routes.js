@@ -6,7 +6,7 @@ const {minimum_access_level_required} = require('../common/middleware/access_lev
 
 router.post('/login',user_controller.login);
 router.post('/register',[valid_jwt_needed,minimum_access_level_required(['L3'])],user_controller.register);
-router.post('/password-reset',[valid_jwt_needed,minimum_access_level_required(['L3'])],user_controller.password_reset);
+router.post('/password-reset',[valid_jwt_needed,minimum_access_level_required(['L3','Admin'])],user_controller.password_reset);
 router.post('/register-admin',user_controller.admin_register);
 router.post('/login-admin',user_controller.admin_login);
 
