@@ -163,7 +163,7 @@ module.exports.view_hr = (req, res) => {
                 hr = clean_object(hr_employee[0]);
                 hr.dob = fix_date(hr.dob);
 
-                res.status(200).json({data:clean_object(hr_employee[0])});
+                res.status(200).json(clean_object(hr_employee[0]));
             }else{
                 res.status(400).json({error : 'No employee with L3 access level'})
             }
