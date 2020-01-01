@@ -241,7 +241,7 @@ module.exports.employee_update_contact_details_validation = (data)=>{
         employee_id: joi.string().max(employee_id_size).required(),
         old:joi.object({
             employee_id: joi.string().max(employee_id_size).required(),
-            contact_no: joi.string().max(contact_no_size).pattern(contact_no_regex).message("contact number does not match with a valid contact number pattern").required(),
+            contact_no: joi.string().max(contact_no_size).required(),
         }).required(),
         new:joi.object({
             employee_id: joi.string().max(employee_id_size).required(),
@@ -259,7 +259,7 @@ module.exports.employee_delete_contact_details_validation = (data)=>{
     // }
     const schema = joi.object({
         employee_id: joi.string().max(employee_id_size).required(),
-        contact_no: joi.string().max(contact_no_size).pattern(contact_no_regex).message("contact number does not match with a valid contact number pattern").required(),
+        contact_no: joi.string().max(contact_no_size).required(),
     })
     return schema.validate(data);
 }
@@ -389,7 +389,7 @@ module.exports.employee_update_dependent_validation = (data)=>{
             addr_line_1: joi.string().max(addr_line_1_size),
             addr_line_2: joi.string().max(addr_line_2_size),
             addr_city: joi.string().max(addr_city_size),
-            contact_no: joi.string().max(contact_no_size).pattern(contact_no_regex).message("contact number does not match with a valid contact number pattern"),
+            contact_no: joi.string().max(contact_no_size),
             email: joi.string().max(email_size),
         }).required(),
         new:joi.object({
@@ -434,7 +434,7 @@ module.exports.employee_delete_dependent_validation = (data)=>{
         addr_line_1: joi.string().max(addr_line_1_size),
         addr_line_2: joi.string().max(addr_line_2_size),
         addr_city: joi.string().max(addr_city_size),
-        contact_no: joi.string().max(contact_no_size).pattern(contact_no_regex).message("contact number does not match with a valid contact number pattern"),
+        contact_no: joi.string().max(contact_no_size),
         email: joi.string().max(email_size),
     })
     return schema.validate(data);
@@ -480,7 +480,7 @@ module.exports.employee_update_emergency_contact_validation = (data)=>{
             nic: joi.string().max(nic_size).required(),
             employee_id: joi.string().max(employee_id_size).required(),
             name: joi.string().max(first_name_size),
-            contact_no: joi.string().max(contact_no_size).pattern(contact_no_regex).message("contact number does not match with a valid contact number pattern"),
+            contact_no: joi.string().max(contact_no_size),
         }).required(),
         new:joi.object({
             nic: joi.string().max(nic_size).required(),
@@ -504,7 +504,7 @@ module.exports.employee_delete_emergency_contact_validation = (data)=>{
         nic: joi.string().max(nic_size).required(),
         employee_id: joi.string().max(employee_id_size).required(),
         name: joi.string().max(first_name_size),
-        contact_no: joi.string().max(contact_no_size).pattern(contact_no_regex).message("contact number does not match with a valid contact number pattern"),
+        contact_no: joi.string().max(contact_no_size),
     })
     return schema.validate(data);
 }
