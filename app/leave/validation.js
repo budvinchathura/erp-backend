@@ -41,7 +41,6 @@ module.exports.leave_type_update_validation = (data)=>{
         }).required(),
     })
     return schema.validate(data);
-
 }
 
 
