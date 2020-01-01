@@ -1,5 +1,7 @@
 const joi = require('@hapi/joi');
 
+const leave_type_size = 20; 
+
 module.exports.leave_limit_add_update_validation = (data)=>{
     const schema = joi.object({
         pay_grade: joi.string().required(),
@@ -26,6 +28,18 @@ module.exports.leave_type_add_validation = (data)=>{
         leave_type: joi.string().required()
     })
 
+    return schema.validate(data);
+}
+
+module.exports.leave_type_update_validation = (data)=>{
+    const schema = joi.object({
+        old:joi.object({
+            leave_type: joi.string().max(leave_type_size).required(),
+        }).required(),
+        new:joi.object({
+            leave_type: joi.string().max(leave_type_size).required(),
+        }).required(),
+    })
     return schema.validate(data);
 }
 

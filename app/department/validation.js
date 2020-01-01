@@ -1,12 +1,25 @@
 const joi = require('@hapi/joi');
 
-const department_add_validation = (data)=>{
+const dept_size = 50; 
+
+module.exports.department_add_validation = (data)=>{
     const schema = joi.object({
-        dept_name: joi.string().required()
+        dept_name: joi.string().max(dept_size).required(),
     })
 
     return schema.validate(data);
 
 }
 
-module.exports.department_add_validation = department_add_validation;
+module.exports.department_update_validation = (data)=>{
+    const schema = joi.object({
+        old:joi.object({
+            dept_name: joi.string().max(dept_size).required(),
+        }).required(),
+        new:joi.object({
+            dept_name: joi.string().max(dept_size).required(),
+        }).required(),
+    })
+    return schema.validate(data);
+}
+

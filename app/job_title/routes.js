@@ -5,6 +5,6 @@ const {minimum_access_level_required} = require('../common/middleware/access_lev
 
 router.get('/view', [valid_jwt_needed,minimum_access_level_required(['L1','L2','L3'])],job_title_controller.view);
 router.post('/add', [valid_jwt_needed,minimum_access_level_required(['L1','L2','L3'])],job_title_controller.add);
-router.post('/update', [valid_jwt_needed,minimum_access_level_required(['L1','L2','L3'])],job_title_controller.update);
+router.patch('/add', [valid_jwt_needed,minimum_access_level_required(['L1','L2','L3'])],job_title_controller.update);
 
 module.exports = router;

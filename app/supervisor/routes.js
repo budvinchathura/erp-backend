@@ -7,6 +7,4 @@ router.get('/subs', [valid_jwt_needed,minimum_access_level_required(['L1','L2','
 router.post('/sub-leaves', [valid_jwt_needed,minimum_access_level_required(['L1','L2','L3'])],supervisor_controller.subordinate_leaves);
 router.post('/sub-leave', [valid_jwt_needed,minimum_access_level_required(['L1','L2','L3'])],supervisor_controller.change_leave_state);
 
-
-
 module.exports = router;

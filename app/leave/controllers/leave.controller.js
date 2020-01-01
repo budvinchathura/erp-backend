@@ -5,7 +5,7 @@ var _emp_leave_taken_procedure_model = require ('../../models/models/employee_le
 var _my_leave_types_procedure_model = require ('../../models/models/my_leave_types_procedure_model');
 
 const { clean_object } = require("../../helpers/h");
-const {leave_limit_add_update_validation,leave_add_validation,leave_type_add_validation} = require("../validation");
+const {leave_limit_add_update_validation,leave_add_validation,leave_type_add_validation,leave_type_update_validation} = require("../validation");
 
 
 module.exports.view_limits = (req, res) => {
@@ -169,6 +169,30 @@ module.exports.add_leave_type = (req,res)=>{
     }else{
         var leave_type_model = new _leave_type_model(req.body);
         leave_type_model.insert()
+        .then((result) => {
+            return res.status(200).json({});
+        }).catch((err) => {
+            return res.status(500).json({ error: err.message });
+        });
+    }
+}
+
+module.exports.update_leave_type = (req,res)=>{
+    // expected input
+    // {
+    //      "new":{
+    //         "leave_type":"Sick1"
+    //     },
+    //     "old":{
+    //         "leave_type":"Sick" 
+    //     }
+    // }
+    const { error } = leave_type_update_validation(req.body);
+    if (error) {
+        return res.status(400).json({ error: error.details[0].message });
+    }else{
+        var leave_type_model = new _leave_type_model(req.body.new);
+        leave_type_model._update(req.body.old.leave_type)
         .then((result) => {
             return res.status(200).json({});
         }).catch((err) => {

@@ -22,6 +22,10 @@ department_model.prototype._find_all = function(){
     return this.find_all([]);
 }
 
-
+department_model.prototype._update = function (old_dept_name){
+    var params = [];
+    params.push(mysql.escapeId('dept_name').concat(' = ').concat(mysql.escape(old_dept_name)));
+    return this.update(params);
+}
 
 module.exports = department_model;

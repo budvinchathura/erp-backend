@@ -22,7 +22,11 @@ leave_type_model.prototype._find_all = function(){
     return this.find_all([]);
 }
 
-
+leave_type_model.prototype._update = function (old_leave_type){
+    var params = [];
+    params.push(mysql.escapeId('leave_type').concat(' = ').concat(mysql.escape(old_leave_type)));
+    return this.update(params);
+}
 
 
 
