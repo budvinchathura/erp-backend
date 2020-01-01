@@ -28,10 +28,10 @@ router.patch('/emergency',[valid_jwt_needed,minimum_access_level_required(['L2',
 router.delete('/emergency',[valid_jwt_needed,minimum_access_level_required(['L2','L3']),before_update_employee,has_authority,employee_controller.delete_emergency_contact]);
 router.post('/custom',[valid_jwt_needed,minimum_access_level_required(['L2','L3']),before_update_employee,has_authority,employee_controller.insert_custom_attributes]);
 router.patch('/custom',[valid_jwt_needed,minimum_access_level_required(['L2','L3']),before_update_employee,has_authority,employee_controller.update_custom_attribute]);
-router.get('/form-attributes', [valid_jwt_needed,minimum_access_level_required(['L2','L3'])], employee_controller.form_attributes);
 
 //L2,L3,Admin
 router.post('/view',[valid_jwt_needed,minimum_access_level_required(['L2','L3','Admin']),employee_controller.search_by_id]);
+router.get('/form-attributes', [valid_jwt_needed,minimum_access_level_required(['L2','L3','Admin'])], employee_controller.form_attributes);
 
 
 
