@@ -35,7 +35,7 @@ function employee_model(data={}){
 employee_model.prototype = Object.create(model.prototype);
 
 employee_model.prototype.find_by_id = function (id){
-    var params = default_params.slice();
+    var params = [];
     params.push(mysql.escapeId('employee_id').concat(' = ').concat(mysql.escape(id)));
     // console.log(params);
     return this.find_first(params);
