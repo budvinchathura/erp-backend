@@ -38,7 +38,7 @@ module.exports.login = (req, res) => {
                 return res.status(400).json({error:'could not find username'});
             }
         }).catch((err) => {
-            return res.status(500).json({error:message});
+            return res.status(500).json({error:err.message});
         });
 }
 
